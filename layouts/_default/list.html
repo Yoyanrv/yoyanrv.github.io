@@ -4,106 +4,203 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Title }} | {{ .Site.Title }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Tipografía Moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #ffffff;
             --text-main: #111827;
             --text-muted: #6b7280;
             --accent: #3b82f6;
+            --code-bg: #f9fafb;
             --border: #e5e7eb;
+            --wiki-bg: rgba(59, 130, 246, 0.08);
         }
 
         body {
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            margin: 0; padding: 0;
+            line-height: 1.75;
+            margin: 0;
+            padding: 0;
             -webkit-font-smoothing: antialiased;
         }
 
-        .nav { padding: 40px 20px; border-bottom: 1px solid var(--border); }
-        .nav a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
-        .nav a:hover { color: var(--accent); }
-
-        .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
-
-        header { margin-bottom: 60px; }
-        .platform-tag { 
-            color: var(--accent); 
-            text-transform: uppercase; 
-            font-weight: 700; 
-            font-size: 0.85rem; 
-            letter-spacing: 0.1em;
-            display: block;
-            margin-bottom: 8px;
+        /* Navegación Inteligente */
+        .nav {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.05em; margin: 0; }
 
-        /* Lista de Máquinas */
-        .machine-list { display: flex; flex-direction: column; gap: 16px; }
-
-        .machine-item {
+        .nav-content {
+            max-width: 800px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
+        }
+
+        .nav a {
             text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
-        }
-
-        .machine-item:hover {
-            border-color: var(--accent);
-            background-color: #f9fafb;
-            transform: translateX(8px);
-        }
-
-        .machine-info h2 { margin: 0; font-size: 1.25rem; font-weight: 700; }
-        .machine-info p { margin: 4px 0 0; color: var(--text-muted); font-size: 0.95rem; }
-
-        .machine-date {
-            font-size: 0.85rem;
             color: var(--text-muted);
-            font-weight: 500;
-            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
         }
 
-        footer { margin-top: 80px; color: var(--text-muted); font-size: 0.85rem; text-align: center; }
+        .nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Contenedor del Reporte */
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        header {
+            margin-bottom: 48px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            margin-bottom: 12px;
+            line-height: 1.1;
+        }
+
+        .meta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .platform-badge {
+            color: var(--accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Estilos de Contenido Markdown */
+        .content h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .content p {
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+
+        /* Bloques de Código Estilo Moderno */
+        pre {
+            background: var(--code-bg) !important;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            margin: 32px 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: #eb5757;
+        }
+
+        /* Imágenes */
+        img {
+            width: 100%;
+            border-radius: 12px;
+            margin: 40px 0;
+            border: 1px solid var(--border);
+        }
+
+        /* Conceptos resaltados [[Palabra]] */
+        .wiki-link {
+            background-color: var(--wiki-bg);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: 600;
+            border-bottom: 1.5px solid var(--accent);
+        }
+
+        /* Tablas */
+        table {
+            width: 100%;
+            margin: 32px 0;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid var(--text-main);
+            color: var(--text-main);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        footer {
+            margin-top: 100px;
+            padding-bottom: 60px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            padding-top: 40px;
+        }
     </style>
 </head>
 <body>
-    <div class="nav">
-        <div style="max-width: 900px; margin: 0 auto;">
-            <a href="/">← Volver al inicio</a>
-        </div>
-    </div>
 
-    <main class="container">
+    <nav class="nav">
+        <div class="nav-content">
+            <!-- Enlace dinámico al listado de la plataforma actual -->
+            <a href="{{ .Parent.Permalink }}">← Volver a {{ .Parent.Title }}</a>
+            <a href="/">Inicio</a>
+        </div>
+    </nav>
+
+    <article class="container">
         <header>
-            <span class="platform-tag">Laboratorio</span>
+            <span class="platform-badge">{{ .Params.platform }}</span>
             <h1>{{ .Title }}</h1>
+            <div class="meta">
+                <time>{{ .Date.Format "02 de enero, 2006" }}</time>
+                <span>•</span>
+                <span>Por {{ .Site.Params.author | default "YoyanRV" }}</span>
+            </div>
         </header>
 
-        <div class="machine-list">
-            {{ range .Pages }}
-            <a href="{{ .Permalink }}" class="machine-item">
-                <div class="machine-info">
-                    <h2>{{ .Title }}</h2>
-                    <p>{{ .Params.summary | default "Writeup técnico detallado de la máquina." }}</p>
-                </div>
-                <div class="machine-date">
-                    {{ .Date.Format "Jan 2006" }}
-                </div>
-            </a>
-            {{ end }}
+        <div class="content">
+            <!-- Renderizado del contenido con reemplazo de [[Concepto]] -->
+            {{ .Content | replaceRE "\\[\\[(.*?)\\]\\]" "<span class='wiki-link'>$1</span>" | safeHTML }}
         </div>
 
         <footer>
-            {{ len .Pages }} máquinas documentadas en esta sección.
+            Hecho con fines educativos • {{ .Title }}
         </footer>
-    </main>
+    </article>
+
 </body>
 </html>
