@@ -22,8 +22,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .nav { padding: 24px 20px; border-bottom: 1px solid var(--border); background: #fff; position: sticky; top: 0; z-index: 10; }
-        .nav-content { max-width: 900px; margin: 0 auto; }
+        .nav { padding: 40px 20px; border-bottom: 1px solid var(--border); }
         .nav a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
         .nav a:hover { color: var(--accent); }
 
@@ -41,6 +40,7 @@
         }
         h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.05em; margin: 0; }
 
+        /* Lista de Máquinas */
         .machine-list { display: flex; flex-direction: column; gap: 16px; }
 
         .machine-item {
@@ -59,66 +59,50 @@
             border-color: var(--accent);
             background-color: #f9fafb;
             transform: translateX(8px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
-        .machine-info h2 { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
+        .machine-info h2 { margin: 0; font-size: 1.25rem; font-weight: 700; }
         .machine-info p { margin: 4px 0 0; color: var(--text-muted); font-size: 0.95rem; }
 
         .machine-date {
             font-size: 0.85rem;
             color: var(--text-muted);
             font-weight: 500;
-            background: #f3f4f6;
-            padding: 4px 12px;
-            border-radius: 20px;
+            white-space: nowrap;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            color: var(--text-muted);
-        }
-
-        footer { margin-top: 80px; color: var(--text-muted); font-size: 0.85rem; text-align: center; border-top: 1px solid var(--border); padding-top: 40px; }
+        footer { margin-top: 80px; color: var(--text-muted); font-size: 0.85rem; text-align: center; }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-content">
+    <div class="nav">
+        <div style="max-width: 900px; margin: 0 auto;">
             <a href="/">← Volver al inicio</a>
         </div>
-    </nav>
+    </div>
 
     <main class="container">
         <header>
-            <span class="platform-tag">Plataforma</span>
+            <span class="platform-tag">Laboratorio</span>
             <h1>{{ .Title }}</h1>
         </header>
 
         <div class="machine-list">
-            {{ range .RegularPages }}
+            {{ range .Pages }}
             <a href="{{ .Permalink }}" class="machine-item">
                 <div class="machine-info">
                     <h2>{{ .Title }}</h2>
-                    <p>{{ .Params.summary | default "Análisis técnico y resolución de la máquina." }}</p>
+                    <p>{{ .Params.summary | default "Writeup técnico detallado de la máquina." }}</p>
                 </div>
                 <div class="machine-date">
                     {{ .Date.Format "Jan 2006" }}
                 </div>
             </a>
-            {{ else }}
-            <div class="empty-state">
-                <p>No se han encontrado máquinas publicadas en esta sección todavía.</p>
-                <p><small>Verifica que tus archivos .md no tengan "draft: true"</small></p>
-            </div>
             {{ end }}
         </div>
 
         <footer>
-            {{ len .RegularPages }} máquinas documentadas en {{ .Title }}.
+            {{ len .Pages }} máquinas documentadas en esta sección.
         </footer>
     </main>
 </body>
