@@ -1,6 +1,6 @@
 ---
 title: "HackTheBox - Code"
-date: 2026-01-10
+date: 2025-04-01
 platform: "hackthebox"
 logo: "/images/htb.png"
 tags: ["Linux", "Gunicorn", "Python-RCE", "MD5-Cracking", "Sudo-Abuse", "Path-Traversal"]

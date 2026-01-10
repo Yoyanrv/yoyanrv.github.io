@@ -1,12 +1,28 @@
 ---
-title: "OutBound"
-date: 2026-01-10
-plataform: "HackTheBox"
-tags: ["Linux", "SMB", "Exploit-db"]
+title: "HackTheBox - OutBound"
+date: 2025-11-21
+platform: "hackthebox"
+logo: "/images/htb.png"
+tags: ["Linux", "Roundcube", "CVE-2025-49113", "MySQL", "PHP-RCE", "CVE-2025-27591", "Symlink"]
+summary: "Resolución de la máquina OutBound. Explotaremos una vulnerabilidad RCE en Roundcube Webmail 1.6.10, analizaremos sesiones de MySQL para obtener credenciales cifradas y escalaremos privilegios mediante un abuso del binario 'below' (CVE-2025-27591)."
 draft: false
 ---
 
-Esta maquina de [[HackTheBox]] nos proporciona credenciales de Inicio de Sesión:
+Esta es la maquina **[[OutBound]]** de **[[HackTheBox]]**. Un laboratorio muy completo donde la enumeración web y el análisis forense de bases de datos son claves para el movimiento lateral.
+
+### Resumen de Técnicas Usadas
+
+| **Técnica** | **Herramienta / Concepto** |
+| :--- | :--- |
+| **Escaneo de Red y Enumeración** | **[[Nmap]]**, **[[extractPorts]]** |
+| **Reconocimiento Web** | **[[Roundcube Webmail]]**, **[[Wappalyzer]]**, **[[/etc/hosts]]** |
+| **Explotación Inicial (RCE)** | **[[CVE-2025-49113]]**, **[[PHP Exploit]]**, **[[Reverse Shell]]** |
+| **Post-Explotación (Lateral)** | **[[MySQL]]**, **[[config.inc.php]]**, **[[decrypt.sh]]** |
+| **Tratamiento de Datos** | **[[Base64 Decoding]]**, **[[Session Table Analysis]]** |
+| **Escala de Privilegios** | **[[sudo -l]]**, **[[CVE-2025-27591]]** (**[[Below Abuse]]**) |
+| **Técnica de Escalada Final** | **[[Symlink Attack]]**, **[[/etc/passwd Manipulation]]** |
+
+---
 
 Username: **Tyler**
 Password: **LhKL1o9Nm3X2**
