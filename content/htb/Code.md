@@ -55,19 +55,19 @@ Por lo que podemos ver el [[TTL]] de la *maquina* esta mas cerca de los **64=[[L
 
 Pero esto después dentro de la maquina lo podremos comprobar *mejor* con **lsb_release -a**.
 
-Una vez creado el **entorno de trabajo** lo ahora empezaremos con la **enumeración** de con [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]]
+Una vez creado el **entorno de trabajo** lo ahora empezaremos con la **enumeración** de con [[Nmap]
 
 ---
 
-## Uso de  [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]]
+## Uso de  [[Nmap]
 
-A continuación nos meteremos en la carpeta anteriormente creada llamada [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]] :
+A continuación nos meteremos en la carpeta anteriormente creada llamada [[Nmap] :
 
 ```r title:Shell
 ❯ cd nmap/
 ```
 
-Una vez dentro de la carpeta [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]] empieza la **enumeración** para reconocer los [[Puerto]]s que están abiertos en el la **Maquina Victima** con el siguiente comando:
+Una vez dentro de la carpeta [[Nmap] empieza la **enumeración** para reconocer los [[Puerto]]s que están abiertos en el la **Maquina Victima** con el siguiente comando:
 
 ```r title:Nmap
 ❯ nmap -p- --open --min-rate 5000 -sS -vvv -n -Pn 10.10.11.62 -oG allPorts
@@ -90,7 +90,7 @@ La *extracción* de los [[Puerto]]s que nos proporciono el primer comando lo har
 	│ 
 ```
 
-Con lo que nos proporciono podremos ya realizar el siguiente **escaneo** con [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]] :
+Con lo que nos proporciono podremos ya realizar el siguiente **escaneo** con [[Nmap] :
 
 ```r title:Nmap
 ❯ nmap -p22,5000 -sCV 10.10.11.62 -oN targeted

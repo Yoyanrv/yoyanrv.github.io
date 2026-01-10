@@ -7,9 +7,22 @@ logo: "/images/htb.png"
 summary: "Resolución de la máquina Chemistry. Explotaremos una ejecución remota de comandos (RCE) en un analizador de archivos CIF, realizaremos cracking de hashes MD5 de una base de datos SQLite y escalaremos privilegios mediante un Path Traversal en un servicio local de aiohttp."
 ---
 
+Esta es la maquina **[[Chemistry]]** de **[[HackTheBox]]**. En este reporte técnico detallaremos el proceso para completar los siguientes objetivos y conceptos:
 
-Esto es una maquina de [[HackTheBox]] y aquí realizaremos por pasos como realizarla:
+### Resumen de Técnicas Usadas
 
+| **Técnica** | **Herramienta / Concepto** |
+| :--- | :--- |
+| **Escaneo de Red y Enumeración** | **[[Nmap]]**, **[[whichSystem.py]]**, **[[ExtractPorts]]** |
+| **Reconocimiento de Servicios** | **[[Curl]]**, **[[HTML2Text]]**, **[[WhatWeb]]**, **[[Firefox]]** |
+| **RCE (Ejecución Remota de Código)** | **Exploit [[CVE-2024-23346]]** (**[[CIF Parser]]**) |
+| **Movimiento Lateral y Post-Exploitation** | **[[Reverse Shell]]**, **[[SQLite3]]** Inspection |
+| **Extracción y Cracking de Hashes** | **[[CrackStation]]**, **[[Hashcat]]**, **[[MD5 Hash]]** |
+| **Acceso SSH con Credenciales** | **[[SSH]] Login** (Usuario: **[[rosa]]**) |
+| **Enumeración Interna de Puertos** | **[[SS]]**, **[[Local Port Forwarding]]** |
+| **Escalada de Privilegios** | **[[Path Traversal]]** en **[[Aiohttp]]** (**[[CVE-2024-23342]]**) |
+
+---
 Lo primero que deberemos de hacer es hacerle [[Ping]] a la maquina para saber si esta esta conectada o no.
 ```sh title:Shell
 ping -c 1 [IP_OBJETIVO]
@@ -46,7 +59,7 @@ whichSystem.py
 	10.10.11.38 (ttl -> 63): Linux
 ```
 
-Ahora una vez hecho el escaneo principal de la maquina Objetivo, lo que procedemos a usar [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]] para saber los [[Puerto]] que pueden ser vulnerables.
+Ahora una vez hecho el escaneo principal de la maquina Objetivo, lo que procedemos a usar [[Nmap]] para saber los [[Puerto]] que pueden ser vulnerables.
 
 ```sh title:Shell
 nmap -p- --open -sS --min-rate 5000 -vvv -n -Pn [IP_OBJETIVO] -oG Allports
@@ -65,7 +78,7 @@ extractPorts Allports
 		  [*] Ports copied to clipboard
 ```
 
-Una vez extraídos los [[Puerto]] que tenemos habilitados en esta maquina lo que procedemos a hacer es un nuevo escaneo [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap]]:
+Una vez extraídos los [[Puerto]] que tenemos habilitados en esta maquina lo que procedemos a hacer es un nuevo escaneo [[Nmap]]:
 
 ```sh title:Shell
 nmap -p22,5000 -sCV 10.10.11.38 -oN targeted
