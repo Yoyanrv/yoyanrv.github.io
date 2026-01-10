@@ -79,7 +79,10 @@
         </header>
 
         <div class="content">
-            {{ .Content | replaceRE "\\[\\[(.*?)\\]\\]" "<span class='wiki-link'>$1</span>" | safeHTML }}
+            {{/* 1. Primero buscamos las imágenes ![[foto.png]] y las convertimos en <img> 
+               2. Después buscamos las palabras [[palabra]] y las convertimos en <span>
+            */}}
+            {{ .Content | replaceRE "!\\[\\[(.*?)\\]\\]" "<img src='/$1' alt='$1'>" | replaceRE "\\[\\[(.*?)\\]\\]" "<span class='wiki-link'>$1</span>" | safeHTML }}
         </div>
     </article>
 
