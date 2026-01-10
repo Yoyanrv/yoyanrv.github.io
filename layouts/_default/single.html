@@ -56,7 +56,26 @@
             border-bottom: 2px solid var(--accent);
         }
 
-        img { width: 100%; border-radius: 12px; margin: 40px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+       /* Estilo mejorado para las imágenes */
+        img { 
+            width: 100%; 
+            display: block;
+            height: auto;
+            border-radius: 12px; 
+            margin: 45px 0; 
+            /* Un borde sutil para definir la imagen */
+            border: 1px solid rgba(0, 0, 0, 0.08); 
+            /* Sombra más profunda y suave (estilo Apple/Minimalista) */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07); 
+            /* Animación suave al pasar el ratón */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Efecto al pasar el ratón (opcional) */
+        img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+        }
 
         table { width: 100%; margin: 40px 0; border-collapse: collapse; }
         th { text-align: left; padding: 12px; border-bottom: 2px solid var(--text); }
