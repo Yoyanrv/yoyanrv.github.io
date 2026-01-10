@@ -1,9 +1,10 @@
 ---
-title: "Chemistry"
-date: 2026-01-10
-plataform: "HackTheBox"
-tags: ["Linux", "SMB", "Exploit-db"]
-draft: false
+title: "HackTheBox - Chemistry"
+date: 2025-03-10
+tags: ["Linux", "CIF-Parser", "CVE-2024-23346", "SQLite", "CVE-2024-23342", "Aiohttp"]
+platform: "hackthebox"
+logo: "/images/htb.png"
+summary: "Resolución de la máquina Chemistry. Explotaremos una ejecución remota de comandos (RCE) en un analizador de archivos CIF, realizaremos cracking de hashes MD5 de una base de datos SQLite y escalaremos privilegios mediante un Path Traversal en un servicio local de aiohttp."
 ---
 
 
