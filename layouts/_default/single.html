@@ -110,6 +110,23 @@
             font-size: 0.75em;
             margin-right: 5px;
         }
+
+        /* Estilo para las palabras entre [[ ]] */
+.wiki-link {
+    color: var(--hacker-green); /* El color verde que ya usamos */
+    border-bottom: 2px dashed var(--hacker-green); /* Subrayado punteado/discontinuo */
+    padding-bottom: 1px;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.3); /* Un pequeño brillo de neón */
+    cursor: help; /* Cambia el cursor para indicar que es un concepto */
+}
+
+/* Efecto al pasar el ratón por encima */
+.wiki-link:hover {
+    background-color: rgba(0, 255, 65, 0.1);
+    border-bottom-style: solid; /* Se vuelve una línea continua */
+    color: #fff;
+}
     </style>
 </head>
 <body>
@@ -135,7 +152,7 @@
             </header>
 
             <div class="content">
-                {{ .Content }}
+    {{ .Content | replaceRE "\\[\\[(.*?)\\]\\]" "<span class='wiki-link'>$1</span>" | safeHTML }}
             </div>
         </article>
     </div>
