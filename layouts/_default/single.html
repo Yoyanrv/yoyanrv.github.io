@@ -101,65 +101,6 @@
         .back-platform strong {
             color: var(--accent);
         }
-
-        /* Layout para separar ToC del Contenido */
-        @media (min-width: 1100px) {
-            .main-layout {
-                max-width: 1100px !important; /* Ampliamos un poco para que quepa la ToC */
-                display: flex;
-                flex-direction: row-reverse; /* ToC a la derecha */
-                gap: 40px;
-            }
-            .toc-wrapper {
-                width: 250px;
-                position: sticky;
-                top: 40px;
-                height: fit-content;
-            }
-        }
-
-        /* Estilo visual de la Tabla de Contenidos */
-        .toc-wrapper {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            border: 1px solid var(--border);
-            margin-bottom: 40px; /* Para móvil */
-        }
-
-        .toc-title {
-            font-weight: 800;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            color: #999;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        /* Estilo de los links de la ToC */
-        #TableOfContents ul {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-        }
-
-        #TableOfContents ul ul {
-            padding-left: 15px; /* Sangría para sub-títulos */
-            margin-top: 5px;
-        }
-
-        #TableOfContents li { margin-bottom: 8px; }
-
-        #TableOfContents a {
-            text-decoration: none;
-            color: #555;
-            transition: color 0.2s;
-        }
-
-        #TableOfContents a:hover {
-            color: var(--accent);
-        }
     </style>
 </head>
 <body>
@@ -176,30 +117,25 @@
         </div>
     </div>
 
-<article class="container main-layout">
-        {{ if .TableOfContents }}
-        <aside class="toc-wrapper">
-            <div class="toc-title">EN ESTE REPORTE</div>
-            {{ .TableOfContents }}
-        </aside>
-        {{ end }}
-
-        <div class="post-body">
-            <header>
-                <h1>{{ .Title }}</h1>
-                <div class="meta">
-                    {{ .Date.Format "02 Jan, 2006" }} • {{ .Params.platform | upper }}
-                </div>
-            </header>
-
-            <div class="content">
-                {{/* Tu lógica de imágenes y wiki-links que ya funciona */}}
-                {{ $content := .Content }}
-                {{ $content = $content | replaceRE `!\[\[(.*?)\]\]` `<img src="/images/$1" alt="$1">` }}
-                {{ $content = $content | replaceRE `\[\[(.*?)\]\]` `<span class="wiki-link">$1</span>` }}
-                {{ $content | safeHTML }}
+    <article class="container">
+        <header>
+            <h1>{{ .Title }}</h1>
+            <div class="meta">
+                {{ .Date.Format "02 Jan, 2006" }} • {{ .Params.platform | upper }}
             </div>
-        </div>
+        </header>
+
+<div class="content">
+    {{ $content := .Content }}
+    
+    {{/* 1. Buscamos ![[foto.png]] y le decimos que la ruta es /images/foto.png */}}
+    {{ $content = $content | replaceRE `!\[\[(.*?)\]\]` `<img src="/images/$1" alt="$1">` }}
+    
+    {{/* 2. Buscamos [[palabra]] para ponerle el estilo azul */}}
+    {{ $content = $content | replaceRE `\[\[(.*?)\]\]` `<span class="wiki-link">$1</span>` }}
+    
+    {{ $content | safeHTML }}
+</div>
     </article>
 
     <footer style="margin: 100px 0; text-align: center; color: #999;">
