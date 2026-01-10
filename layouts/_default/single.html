@@ -78,12 +78,17 @@
             </div>
         </header>
 
-        <div class="content">
-            {{/* 1. Primero buscamos las imágenes ![[foto.png]] y las convertimos en <img> 
-               2. Después buscamos las palabras [[palabra]] y las convertimos en <span>
-            */}}
-            {{ .Content | replaceRE "!\\[\\[(.*?)\\]\\]" "<img src='/$1' alt='$1'>" | replaceRE "\\[\\[(.*?)\\]\\]" "<span class='wiki-link'>$1</span>" | safeHTML }}
-        </div>
+<div class="content">
+    {{ $content := .Content }}
+    
+    {{/* 1. Buscamos ![[foto.png]] y le decimos que la ruta es /images/foto.png */}}
+    {{ $content = $content | replaceRE `!\[\[(.*?)\]\]` `<img src="/images/$1" alt="$1">` }}
+    
+    {{/* 2. Buscamos [[palabra]] para ponerle el estilo azul */}}
+    {{ $content = $content | replaceRE `\[\[(.*?)\]\]` `<span class="wiki-link">$1</span>` }}
+    
+    {{ $content | safeHTML }}
+</div>
     </article>
 
     <footer style="margin: 100px 0; text-align: center; color: #999;">
