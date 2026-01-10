@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} | {{ .Site.Title }}</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #c9d1d9; /* Gris claro para lectura */
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 850px;
+            width: 100%;
+        }
+        header {
+            border-bottom: 2px solid #00ff41;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+        .back-link {
+            color: #00ff41;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        h1 { color: #fff; margin: 10px 0; }
+        .meta { color: #888; font-size: 0.8em; margin-bottom: 20px; }
+        
+        /* Estilo para el contenido de los Write-ups */
+        .content { background: #161b22; padding: 25px; border-radius: 5px; border: 1px solid #30363d; }
+        .content h2, .content h3 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        
+        /* Estilo para bloques de comandos/código */
+        pre {
+            background: #000;
+            padding: 15px;
+            border-left: 3px solid #00ff41;
+            overflow-x: auto;
+            color: #f8f8f2;
+        }
+        code { font-family: 'Consolas', monospace; color: #ff79c6; }
+        
+        /* Imágenes (Screenshots de las máquinas) */
+        img { max-width: 100%; height: auto; border: 1px solid #00ff41; margin: 20px 0; }
+        
+        .tag { color: #0f0f0f; background: #00ff41; padding: 2px 8px; font-size: 0.7em; border-radius: 3px; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-link">< Volver al índice</a>
+            <h1>{{ .Title }}</h1>
+            <div class="meta">
+                <span>Fecha: {{ .Date.Format "02/01/2006" }}</span> | 
+                <span>Autor: {{ .Site.Author.name | default "Admin" }}</span>
+            </div>
+            <div>
+                {{ range .Params.tags }}
+                <span class="tag">#{{ . }}</span>
+                {{ end }}
+            </div>
+        </header>
+
+        <article class="content">
+            {{ .Content }}
+        </article>
+
+        <footer style="margin-top: 40px; text-align: center; color: #444; font-size: 0.8em;">
+            <p>_ Terminando sesión... exit</p>
+        </footer>
+    </div>
+</body>
+</html>

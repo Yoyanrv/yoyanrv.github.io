@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta name="generator" content="Hugo 0.154.3"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Potafolio De Pentesting</title>
+    <style>
+         
+        body { 
+            background-color: #0d1117; 
+            color: #c9d1d9; 
+            font-family: 'Courier New', Courier, monospace; 
+            margin: 0; 
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+        .container { max-width: 1100px; width: 100%; }
+
+        header { 
+            border-bottom: 2px solid #238636; 
+            padding-bottom: 20px; 
+            margin-bottom: 50px; 
+            text-align: center;
+        }
+        h1 { color: #58a6ff; letter-spacing: 2px; text-transform: uppercase; }
+
+         
+        .grid-folders { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 25px; 
+        }
+
+         
+        .folder-card { 
+            background: #161b22; 
+            border: 1px solid #30363d; 
+            border-radius: 12px;
+            padding: 30px; 
+            text-align: center; 
+            text-decoration: none; 
+            color: #c9d1d9;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;  
+            min-height: 250px;
+        }
+
+        .folder-card:hover { 
+            border-color: #00ff41; 
+            transform: translateY(-8px);
+            background: #1c2128;
+            box-shadow: 0 10px 20px rgba(0, 255, 65, 0.1);
+        }
+
+         
+        .logo-container { 
+            width: 100%;
+            height: 100px;  
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img { 
+            max-width: 80%;   
+            max-height: 100%;  
+            object-fit: contain;  
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));  
+        }
+
+         
+        .folder-title { 
+            font-size: 1.4em; 
+            font-weight: bold; 
+            color: #00ff41; 
+            text-transform: uppercase; 
+            margin-bottom: 15px;
+        }
+
+        .count { 
+            background: #238636; 
+            color: white; 
+            padding: 4px 15px; 
+            border-radius: 20px; 
+            font-size: 0.85em; 
+            font-weight: bold;
+        }
+
+        footer { text-align: center; margin-top: 60px; color: #484f58; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mi Potafolio De Pentesting</h1>
+            <p style="color: #00ff41;">> root@yoyanrv:~/plataformas# ls -la</p>
+        </header>
+
+        <main class="grid-folders">
+            
+            <a href="http://localhost:1313/htb/" class="folder-card">
+                <div class="logo-container">
+                    
+                        <img src="/images/htb.png" alt="Hack The Box">
+                    
+                </div>
+                
+                <div class="folder-title">Hack The Box</div>
+                <span class="count">3 MÁQUINAS</span>
+            </a>
+            
+            <a href="http://localhost:1313/tryhackme/" class="folder-card">
+                <div class="logo-container">
+                    
+                        <img src="/images/tryhackme.png" alt="TryHackMe">
+                    
+                </div>
+                
+                <div class="folder-title">TryHackMe</div>
+                <span class="count">0 MÁQUINAS</span>
+            </a>
+            
+            <a href="http://localhost:1313/vulnhub/" class="folder-card">
+                <div class="logo-container">
+                    
+                        <img src="/images/vulnhub.png" alt="VulnHub">
+                    
+                </div>
+                
+                <div class="folder-title">VulnHub</div>
+                <span class="count">0 MÁQUINAS</span>
+            </a>
+            
+        </main>
+
+        <footer>
+            <p>&copy; 2026 - Generado con Hugo para Pentesting</p>
+        </footer>
+    </div>
+</body>
+</html>
