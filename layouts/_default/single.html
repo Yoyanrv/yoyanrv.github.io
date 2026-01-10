@@ -4,122 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Title }} | {{ .Site.Title }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #ffffff;
-            --text-main: #111827;
-            --text-muted: #6b7280;
+            --text: #1a1a1a;
             --accent: #3b82f6;
-            --border: #e5e7eb;
+            --code-bg: #f3f4f6;
+            --border: #eeeeee;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--text-main);
+            color: var(--text);
             font-family: 'Inter', sans-serif;
+            line-height: 1.8;
             margin: 0; padding: 0;
-            -webkit-font-smoothing: antialiased;
         }
 
-        .nav { padding: 24px 20px; border-bottom: 1px solid var(--border); background: #fff; position: sticky; top: 0; z-index: 10; }
-        .nav-content { max-width: 900px; margin: 0 auto; }
-        .nav a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
-        .nav a:hover { color: var(--accent); }
+        .nav { padding: 40px 20px; border-bottom: 1px solid var(--border); margin-bottom: 60px; }
+        .nav a { text-decoration: none; color: var(--accent); font-weight: 600; font-size: 0.9rem; }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        .container { max-width: 760px; margin: 0 auto; padding: 0 20px; }
 
-        header { margin-bottom: 60px; }
-        .platform-tag { 
-            color: var(--accent); 
-            text-transform: uppercase; 
-            font-weight: 700; 
-            font-size: 0.85rem; 
-            letter-spacing: 0.1em;
-            display: block;
-            margin-bottom: 8px;
-        }
-        h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.05em; margin: 0; }
+        h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 10px; line-height: 1.1; }
+        .meta { color: #666; margin-bottom: 60px; font-size: 1rem; }
 
-        .machine-list { display: flex; flex-direction: column; gap: 16px; }
+        /* Estilo para el contenido Markdown */
+        .content h2 { font-size: 2rem; margin-top: 60px; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .content p { font-size: 1.15rem; margin-bottom: 24px; }
 
-        .machine-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Bloques de código minimalistas */
+        pre {
+            background: var(--code-bg) !important;
             padding: 24px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 32px 0;
             border: 1px solid var(--border);
-            border-radius: 12px;
+        }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.95em; color: #d63384; }
+
+        /* Estilo para las palabras [[Concepto]] */
+        .wiki-link {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            padding: 0 4px;
+            border-radius: 4px;
+            font-weight: 600;
             text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
+            border-bottom: 2px solid var(--accent);
         }
 
-        .machine-item:hover {
-            border-color: var(--accent);
-            background-color: #f9fafb;
-            transform: translateX(8px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
+        img { width: 100%; border-radius: 12px; margin: 40px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 
-        .machine-info h2 { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
-        .machine-info p { margin: 4px 0 0; color: var(--text-muted); font-size: 0.95rem; }
-
-        .machine-date {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            background: #f3f4f6;
-            padding: 4px 12px;
-            border-radius: 20px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            color: var(--text-muted);
-        }
-
-        footer { margin-top: 80px; color: var(--text-muted); font-size: 0.85rem; text-align: center; border-top: 1px solid var(--border); padding-top: 40px; }
+        table { width: 100%; margin: 40px 0; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--text); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-content">
-            <a href="/">← Volver al inicio</a>
+    <div class="nav">
+        <div style="max-width: 760px; margin: 0 auto;">
+            <a href="/">← Inicio</a>
         </div>
-    </nav>
+    </div>
 
-    <main class="container">
+    <article class="container">
         <header>
-            <span class="platform-tag">Plataforma</span>
             <h1>{{ .Title }}</h1>
+            <div class="meta">
+                {{ .Date.Format "02 Jan, 2006" }} • {{ .Params.platform | upper }}
+            </div>
         </header>
 
-        <div class="machine-list">
-            {{ range .RegularPages }}
-            <a href="{{ .Permalink }}" class="machine-item">
-                <div class="machine-info">
-                    <h2>{{ .Title }}</h2>
-                    <p>{{ .Params.summary | default "Análisis técnico y resolución de la máquina." }}</p>
-                </div>
-                <div class="machine-date">
-                    {{ .Date.Format "Jan 2006" }}
-                </div>
-            </a>
-            {{ else }}
-            <div class="empty-state">
-                <p>No se han encontrado máquinas publicadas en esta sección todavía.</p>
-                <p><small>Verifica que tus archivos .md no tengan "draft: true"</small></p>
-            </div>
-            {{ end }}
+        <div class="content">
+            {{ .Content | replaceRE "\\[\\[(.*?)\\]\\]" "<span class='wiki-link'>$1</span>" | safeHTML }}
         </div>
+    </article>
 
-        <footer>
-            {{ len .RegularPages }} máquinas documentadas en {{ .Title }}.
-        </footer>
-    </main>
+    <footer style="margin: 100px 0; text-align: center; color: #999;">
+        Fin del reporte técnico
+    </footer>
 </body>
 </html>
