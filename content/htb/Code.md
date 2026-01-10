@@ -1,7 +1,7 @@
 ---
 title: "Code"
 date: 2026-01-10
-plataform: "TryHackMe"
+plataform: "HackTheBox"
 tags: ["Linux", "SMB", "Exploit-db"]
 draft: false
 ---

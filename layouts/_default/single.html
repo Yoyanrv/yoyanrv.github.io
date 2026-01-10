@@ -4,77 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Title }} | {{ .Site.Title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #0d1117;
+            --card-bg: #161b22;
+            --text: #c9d1d9;
+            --hacker-green: #00ff41;
+            --hacker-blue: #58a6ff;
+            --border: #30363d;
+        }
+
         body {
-            background-color: #0f0f0f;
-            color: #c9d1d9; /* Gris claro para lectura */
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 1.6;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.7;
             margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
             padding: 20px;
-            display: flex;
-            justify-content: center;
+            background: rgba(13, 17, 23, 0.9);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
+
         .container {
-            max-width: 850px;
-            width: 100%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
-        header {
-            border-bottom: 2px solid #00ff41;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
+
+        /* Estilo del Reporte */
+        .report-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .back-link {
-            color: #00ff41;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        h1 { color: #fff; margin: 10px 0; }
-        .meta { color: #888; font-size: 0.8em; margin-bottom: 20px; }
+
+        header { border-bottom: 2px solid var(--hacker-green); margin-bottom: 30px; padding-bottom: 20px; }
+        h1 { color: #fff; margin: 0; font-size: 2.2em; }
+        .meta { color: #8b949e; font-size: 0.9em; margin-top: 10px; }
         
-        /* Estilo para el contenido de los Write-ups */
-        .content { background: #161b22; padding: 25px; border-radius: 5px; border: 1px solid #30363d; }
-        .content h2, .content h3 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        /* Contenido Markdown */
+        .content h2 { color: var(--hacker-blue); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 40px; }
+        .content h3 { color: #fff; margin-top: 30px; }
         
-        /* Estilo para bloques de comandos/código */
+        /* BLOQUES DE CÓDIGO (Crucial para Writeups) */
         pre {
-            background: #000;
-            padding: 15px;
-            border-left: 3px solid #00ff41;
+            background: #000 !important;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
             overflow-x: auto;
-            color: #f8f8f2;
+            position: relative;
         }
-        code { font-family: 'Consolas', monospace; color: #ff79c6; }
         
-        /* Imágenes (Screenshots de las máquinas) */
-        img { max-width: 100%; height: auto; border: 1px solid #00ff41; margin: 20px 0; }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: #ff7b72; }
         
-        .tag { color: #0f0f0f; background: #00ff41; padding: 2px 8px; font-size: 0.7em; border-radius: 3px; margin-right: 5px; }
+        /* Estilo para las Tablas de Nmap/ExtractPorts */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid var(--border); padding: 12px; text-align: left; }
+        th { background: #21262d; color: var(--hacker-green); }
+
+        /* Blockquotes como avisos de "Tip" o "Warning" */
+        blockquote {
+            border-left: 4px solid var(--hacker-green);
+            background: rgba(0, 255, 65, 0.05);
+            margin: 20px 0;
+            padding: 15px 25px;
+            color: #d2d2d2;
+            font-style: italic;
+        }
+
+        /* Imágenes ajustadas */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin: 20px 0;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .back-btn {
+            color: var(--hacker-green);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            background: #238636;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 15px;
+            font-size: 0.75em;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="/" class="back-link">< Volver al índice</a>
-            <h1>{{ .Title }}</h1>
-            <div class="meta">
-                <span>Fecha: {{ .Date.Format "02/01/2006" }}</span> | 
-                <span>Autor: {{ .Site.Author.name | default "Admin" }}</span>
-            </div>
-            <div>
-                {{ range .Params.tags }}
-                <span class="tag">#{{ . }}</span>
-                {{ end }}
-            </div>
-        </header>
-
-        <article class="content">
-            {{ .Content }}
-        </article>
-
-        <footer style="margin-top: 40px; text-align: center; color: #444; font-size: 0.8em;">
-            <p>_ Terminando sesión... exit</p>
-        </footer>
+    <div class="navbar">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <a href="/" class="back-btn"> ⇽ VOLVER AL LABORATORIO</a>
+        </div>
     </div>
+
+    <div class="container">
+        <article class="report-card">
+            <header>
+                <h1>{{ .Title }}</h1>
+                <div class="meta">
+                    Fecha: {{ .Date.Format "02/01/2006" }} | 
+                    Plataforma: <span style="color: var(--hacker-green); font-weight: bold;">{{ .Params.platform | upper }}</span>
+                </div>
+                <div style="margin-top: 15px;">
+                    {{ range .Params.tags }}
+                    <span class="tag">#{{ . }}</span>
+                    {{ end }}
+                </div>
+            </header>
+
+            <div class="content">
+                {{ .Content }}
+            </div>
+        </article>
+    </div>
+
+    <footer style="text-align: center; padding: 40px; color: #484f58; font-size: 0.8em;">
+        EOF - {{ .Title }} - Generado por YoyanRV
+    </footer>
 </body>
 </html>
