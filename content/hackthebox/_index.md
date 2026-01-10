@@ -1,5 +1,5 @@
 ---
-title: "Hack The Box"
+title: "hackthebox"
 logo: "/images/htb.png"
 ---
 ---
