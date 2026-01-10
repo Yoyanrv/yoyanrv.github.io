@@ -2,29 +2,108 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{{ .Title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} | {{ .Site.Title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0f0f0f; color: #00ff41; font-family: 'Courier New', monospace; padding: 40px; }
-        .machine-list { margin-top: 30px; }
-        .machine-item { 
-            background: #161b22; border-left: 5px solid #00ff41; padding: 15px;
-            margin-bottom: 10px; display: flex; justify-content: space-between;
-            text-decoration: none; color: #58a6ff;
+        :root {
+            --bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --accent: #3b82f6;
+            --border: #e5e7eb;
         }
-        .machine-item:hover { background: #1c2128; }
-        .back { color: #888; text-decoration: none; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .nav { padding: 40px 20px; border-bottom: 1px solid var(--border); }
+        .nav a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
+        .nav a:hover { color: var(--accent); }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+
+        header { margin-bottom: 60px; }
+        .platform-tag { 
+            color: var(--accent); 
+            text-transform: uppercase; 
+            font-weight: 700; 
+            font-size: 0.85rem; 
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 8px;
+        }
+        h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.05em; margin: 0; }
+
+        /* Lista de Máquinas */
+        .machine-list { display: flex; flex-direction: column; gap: 16px; }
+
+        .machine-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .machine-item:hover {
+            border-color: var(--accent);
+            background-color: #f9fafb;
+            transform: translateX(8px);
+        }
+
+        .machine-info h2 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+        .machine-info p { margin: 4px 0 0; color: var(--text-muted); font-size: 0.95rem; }
+
+        .machine-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        footer { margin-top: 80px; color: var(--text-muted); font-size: 0.85rem; text-align: center; }
     </style>
 </head>
 <body>
-    <a href="/" class="back">< Volver</a>
-    <h1>PLATAFORMA: {{ .Title }}</h1>
-    <div class="machine-list">
-        {{ range .Pages }}
-        <a href="{{ .Permalink }}" class="machine-item">
-            <span>{{ .Title }}</span>
-            <span style="color:#888;">{{ .Date.Format "2006-01-02" }}</span>
-        </a>
-        {{ end }}
+    <div class="nav">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <a href="/">← Volver al inicio</a>
+        </div>
     </div>
+
+    <main class="container">
+        <header>
+            <span class="platform-tag">Laboratorio</span>
+            <h1>{{ .Title }}</h1>
+        </header>
+
+        <div class="machine-list">
+            {{ range .Pages }}
+            <a href="{{ .Permalink }}" class="machine-item">
+                <div class="machine-info">
+                    <h2>{{ .Title }}</h2>
+                    <p>{{ .Params.summary | default "Writeup técnico detallado de la máquina." }}</p>
+                </div>
+                <div class="machine-date">
+                    {{ .Date.Format "Jan 2006" }}
+                </div>
+            </a>
+            {{ end }}
+        </div>
+
+        <footer>
+            {{ len .Pages }} máquinas documentadas en esta sección.
+        </footer>
+    </main>
 </body>
 </html>

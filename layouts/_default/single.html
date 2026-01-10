@@ -4,161 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Title }} | {{ .Site.Title }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0d1117;
-            --card-bg: #161b22;
-            --text: #c9d1d9;
-            --hacker-green: #00ff41;
-            --hacker-blue: #58a6ff;
-            --border: #30363d;
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --accent: #3b82f6;
+            --code-bg: #f3f4f6;
+            --border: #eeeeee;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
-            line-height: 1.7;
-            margin: 0;
-            padding: 0;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            margin: 0; padding: 0;
         }
 
-        .navbar {
-            padding: 20px;
-            background: rgba(13, 17, 23, 0.9);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+        .nav { padding: 40px 20px; border-bottom: 1px solid var(--border); margin-bottom: 60px; }
+        .nav a { text-decoration: none; color: var(--accent); font-weight: 600; font-size: 0.9rem; }
 
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 760px; margin: 0 auto; padding: 0 20px; }
 
-        /* Estilo del Reporte */
-        .report-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 10px; line-height: 1.1; }
+        .meta { color: #666; margin-bottom: 60px; font-size: 1rem; }
 
-        header { border-bottom: 2px solid var(--hacker-green); margin-bottom: 30px; padding-bottom: 20px; }
-        h1 { color: #fff; margin: 0; font-size: 2.2em; }
-        .meta { color: #8b949e; font-size: 0.9em; margin-top: 10px; }
-        
-        /* Contenido Markdown */
-        .content h2 { color: var(--hacker-blue); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 40px; }
-        .content h3 { color: #fff; margin-top: 30px; }
-        
-        /* BLOQUES DE CÓDIGO (Crucial para Writeups) */
+        /* Estilo para el contenido Markdown */
+        .content h2 { font-size: 2rem; margin-top: 60px; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .content p { font-size: 1.15rem; margin-bottom: 24px; }
+
+        /* Bloques de código minimalistas */
         pre {
-            background: #000 !important;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            background: var(--code-bg) !important;
+            padding: 24px;
+            border-radius: 12px;
             overflow-x: auto;
-            position: relative;
-        }
-        
-        code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: #ff7b72; }
-        
-        /* Estilo para las Tablas de Nmap/ExtractPorts */
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th, td { border: 1px solid var(--border); padding: 12px; text-align: left; }
-        th { background: #21262d; color: var(--hacker-green); }
-
-        /* Blockquotes como avisos de "Tip" o "Warning" */
-        blockquote {
-            border-left: 4px solid var(--hacker-green);
-            background: rgba(0, 255, 65, 0.05);
-            margin: 20px 0;
-            padding: 15px 25px;
-            color: #d2d2d2;
-            font-style: italic;
-        }
-
-        /* Imágenes ajustadas */
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
+            margin: 32px 0;
             border: 1px solid var(--border);
-            margin: 20px 0;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
         }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.95em; color: #d63384; }
 
-        .back-btn {
-            color: var(--hacker-green);
+        /* Estilo para las palabras [[Concepto]] */
+        .wiki-link {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            padding: 0 4px;
+            border-radius: 4px;
+            font-weight: 600;
             text-decoration: none;
-            display: inline-block;
-            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
         }
 
-        .tag {
-            background: #238636;
-            color: #fff;
-            padding: 2px 10px;
-            border-radius: 15px;
-            font-size: 0.75em;
-            margin-right: 5px;
-        }
+        img { width: 100%; border-radius: 12px; margin: 40px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 
-        /* Estilo para las palabras entre [[ ]] */
-.wiki-link {
-    color: var(--hacker-green); /* El color verde que ya usamos */
-    border-bottom: 2px dashed var(--hacker-green); /* Subrayado punteado/discontinuo */
-    padding-bottom: 1px;
-    font-weight: bold;
-    text-shadow: 0 0 5px rgba(0, 255, 65, 0.3); /* Un pequeño brillo de neón */
-    cursor: help; /* Cambia el cursor para indicar que es un concepto */
-}
-
-/* Efecto al pasar el ratón por encima */
-.wiki-link:hover {
-    background-color: rgba(0, 255, 65, 0.1);
-    border-bottom-style: solid; /* Se vuelve una línea continua */
-    color: #fff;
-}
+        table { width: 100%; margin: 40px 0; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--text); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div style="max-width: 900px; margin: 0 auto;">
-            <a href="/" class="back-btn"> ⇽ VOLVER AL LABORATORIO</a>
+    <div class="nav">
+        <div style="max-width: 760px; margin: 0 auto;">
+            <a href="/">← Inicio</a>
         </div>
     </div>
 
-    <div class="container">
-        <article class="report-card">
-            <header>
-                <h1>{{ .Title }}</h1>
-                <div class="meta">
-                    Fecha: {{ .Date.Format "02/01/2006" }} | 
-                    Plataforma: <span style="color: var(--hacker-green); font-weight: bold;">{{ .Params.platform | upper }}</span>
-                </div>
-                <div style="margin-top: 15px;">
-                    {{ range .Params.tags }}
-                    <span class="tag">#{{ . }}</span>
-                    {{ end }}
-                </div>
-            </header>
-
-            <div class="content">
-    {{ .Content | replaceRE "\\[\\[(.*?)\\]\\]" "<span class='wiki-link'>$1</span>" | safeHTML }}
+    <article class="container">
+        <header>
+            <h1>{{ .Title }}</h1>
+            <div class="meta">
+                {{ .Date.Format "02 Jan, 2006" }} • {{ .Params.platform | upper }}
             </div>
-        </article>
-    </div>
+        </header>
 
-    <footer style="text-align: center; padding: 40px; color: #484f58; font-size: 0.8em;">
-        EOF - {{ .Title }} - Generado por YoyanRV
+        <div class="content">
+            {{ .Content | replaceRE "\\[\\[(.*?)\\]\\]" "<span class='wiki-link'>$1</span>" | safeHTML }}
+        </div>
+    </article>
+
+    <footer style="margin: 100px 0; text-align: center; color: #999;">
+        Fin del reporte técnico
     </footer>
 </body>
 </html>
