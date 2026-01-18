@@ -1,6 +1,6 @@
 ---
 title: "VulnHub - Escalate My Page"
-date: 2025-01-18
+date: 2026-01-18
 platform: "vulnhub"
 logo: "/images/vulnhub.png"
 tags: ["Linux", "RCE", "SUID", "NFS", "Path-Hijacking", "Sudo-Abuse", "Information-Leakage", "Post-Exploitation"]
