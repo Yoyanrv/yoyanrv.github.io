@@ -1,4 +1,12 @@
-
+---
+title: "VulnHub - Escalate My Page"
+date: 2025-01-18
+platform: "vulnhub"
+logo: "/images/vulnhub.png"
+tags: ["Linux", "RCE", "SUID", "NFS", "Path-Hijacking", "Sudo-Abuse", "Information-Leakage", "Post-Exploitation"]
+summary: "Resolución detallada de la máquina Escalate My Page. Un entorno diseñado para dominar vectores de escalada de privilegios y técnicas avanzadas de post-explotación en Linux."
+draft: false
+---
 Esta es una maquina de [[Vulnhub]] que realizamos como practicas para la **Especialización de Ciberseguridad**.
 
 # Que es lo que vamos a realizar 
