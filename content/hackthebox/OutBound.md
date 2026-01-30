@@ -1,7 +1,7 @@
 ---
 title: "HackTheBox - OutBound"
 date: 2025-11-21
-platform: "hackthebox"
+platform: "HackTheBox"
 logo: "/images/htb.png"
 tags: ["Linux", "Roundcube", "CVE-2025-49113", "MySQL", "PHP-RCE", "CVE-2025-27591", "Symlink"]
 summary: "Resolución de la máquina OutBound. Explotaremos una vulnerabilidad RCE en Roundcube Webmail 1.6.10, analizaremos sesiones de MySQL para obtener credenciales cifradas y escalaremos privilegios mediante un abuso del binario 'below' (CVE-2025-27591)."

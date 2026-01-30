@@ -1,7 +1,7 @@
 ---
 title: "HackTheBox - Code"
 date: 2025-04-01
-platform: "hackthebox"
+platform: "HackTheBox"
 logo: "/images/htb.png"
 tags: ["Linux", "Gunicorn", "Python-RCE", "MD5-Cracking", "Sudo-Abuse", "Path-Traversal"]
 summary: "Resolución de la máquina Code. Explotaremos un editor de código Python para extraer credenciales de una base de datos, realizaremos cracking de hashes MD5 y escalaremos privilegios abusando de un script de backup vulnerable a Path Traversal."
